@@ -1,0 +1,128 @@
+\documentclass[aspectratio=169]{beamer}
+
+% ============================================================
+% Lecture 2: Difference-in-Differences — the Good, the Bad, and the Ugly
+% PhD programme: Economics, Management and Methods for the
+% Sustainable Transition — University of Ferrara
+% Date: 6 May 2026 (10h: ~5h theory + 5h lab)
+% Author: Francesco Rentocchini
+% ============================================================
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% --- Packages ---
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{xcolor}
+
+% --- Bibliography ---
+\bibliographystyle{apalike}
+
+% --- Title info ---
+\title[DiD: the Good, the Bad, and the Ugly]{%
+  Difference-in-Differences:\\
+  The Good, the Bad, and the Ugly}
+\subtitle{Lecture 2 — PhD Causal Inference, Ferrara 2026}
+\author{Francesco Rentocchini}
+\institute{JRC European Commission / University of Milan}
+\date{6 May 2026}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+% ============================================================
+\section{The 2x2 DiD}
+% ============================================================
+
+\begin{frame}{The Classic 2x2 Setup}
+  % TODO: two periods, two groups; parallel trends assumption; DD estimand
+\end{frame}
+
+\begin{frame}{Parallel Trends}
+  % TODO: identification assumption; testable pre-trends; counterfactual path
+\end{frame}
+
+% ============================================================
+\section{TWFE — The Good}
+% ============================================================
+
+\begin{frame}{Two-Way Fixed Effects (TWFE)}
+  % TODO: unit + time FEs; staggered adoption; reghdfe
+\end{frame>
+
+\begin{frame}{When TWFE Works}
+  % TODO: homogeneous treatment effects; clean controls
+\end{frame}
+
+% ============================================================
+\section{TWFE — The Bad and the Ugly}
+% ============================================================
+
+\begin{frame}{Problems with Staggered TWFE}
+  % TODO: Bacon decomposition; negative weights; Callaway-Sant'Anna critique
+\end{frame}
+
+% ============================================================
+\section{Modern DiD Estimators}
+% ============================================================
+
+\begin{frame}{Callaway \& Sant'Anna (2021)}
+  % TODO: group-time ATTs; aggregation; not-yet-treated comparison; csdid
+\end{frame}
+
+\begin{frame}{Sun \& Abraham (2020)}
+  % TODO: interaction-weighted estimator; cohort-specific effects; eventstudyinteract
+\end{frame}
+
+\begin{frame}{de Chaisemartin \& D'Haultfoeuille (2020)}
+  % TODO: did_multiplegt; heterogeneity-robust
+\end{frame}
+
+% ============================================================
+\section{Sensitivity Analysis}
+% ============================================================
+
+\begin{frame}{HonestDiD: Sensitivity to Parallel Trends Violations}
+  % TODO: Rambachan & Roth (2023); smoothness M; breakdown M-bar; honestdid Stata
+\end{frame}
+
+% ============================================================
+\section{Lab Preview}
+% ============================================================
+
+\begin{frame}{Lab 2: DiD in Stata}
+  \begin{block}{What we will do}
+    \begin{itemize}
+      \item TWFE static and dynamic (event-study) regressions
+      \item Callaway \& Sant'Anna estimator (\texttt{csdid}, \texttt{notyet} option)
+      \item Sun \& Abraham estimator (\texttt{eventstudyinteract})
+      \item Bacon decomposition (\texttt{bacondecomp})
+      \item Sensitivity analysis (\texttt{honestdid})
+    \end{itemize}
+  \end{block}
+  \textbf{Script:} \texttt{Lab/L2\_did.do}
+\end{frame}
+
+% ============================================================
+% References
+% ============================================================
+
+\begin{frame}[allowframebreaks]{References}
+  \bibliography{../Bibliography_base}
+\end{frame}
+
+\end{document}

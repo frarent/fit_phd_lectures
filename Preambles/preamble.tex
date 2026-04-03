@@ -1,0 +1,178 @@
+% ============================================================
+% preamble.tex — fit_phd_lectures
+% Adapted from Scott Cunningham's Causal Inference Mixtape Sessions
+% Compatible with pdflatex
+% ============================================================
+
+% --- Colors — JRC / European Commission identity ------------
+\usepackage{xcolor}
+
+% EC / JRC brand palette — softer pastel-leaning blue
+\definecolor{ecblue}{HTML}{2E75B6}    % JRC pastel blue (softer than flag blue)
+\definecolor{jrcblue}{HTML}{5B9BD5}   % JRC lighter accent blue
+\definecolor{eugold}{HTML}{FFCC00}    % EU flag gold
+\definecolor{ecnavy}{HTML}{1F3864}    % deep navy for text / headers
+\definecolor{ecgray}{HTML}{54585A}    % EC institutional gray
+\definecolor{ecred}{HTML}{C0392B}     % alert / warning red
+\definecolor{ecgreen}{HTML}{1E7D34}   % example / positive green
+\definecolor{lightblue}{HTML}{DEEBF7} % light blue tint for block bodies
+\definecolor{offwhite}{HTML}{F7F8FC}  % near-white slide bg
+
+% Convenience aliases
+\definecolor{accent}{HTML}{2E75B6}    % = ecblue
+\definecolor{accent2}{HTML}{C0392B}   % = ecred
+\definecolor{gray100}{HTML}{DEEBF7}   % = lightblue
+\definecolor{gray800}{HTML}{1F3864}   % = ecnavy
+
+% Legacy aliases (used in slide source — map to JRC equivalents)
+\definecolor{jet}{HTML}{1B2A6B}       % was near-black, now ecnavy
+\definecolor{asher}{HTML}{54585A}     % was mid-gray, now ecgray
+\definecolor{daisy}{HTML}{FFCC00}     % was yellow, now eugold
+\definecolor{alice}{HTML}{0065A2}     % was teal, now jrcblue
+\definecolor{coral}{HTML}{C0392B}     % was orange-red, now ecred
+\definecolor{ruby}{HTML}{C0392B}      % was dark red, now ecred
+\definecolor{kelly}{HTML}{1E7D34}     % was olive, now ecgreen
+\definecolor{cranberry}{HTML}{C0392B} % was pink-red, now ecred
+
+% --- Beamer theme — JRC style -------------------------------
+\setbeamercolor{background canvas}{bg = white}
+\setbeamersize{text margin left = 15pt, text margin right = 15pt}
+
+% Frame title: white text on EC blue bar
+\setbeamercolor{frametitle}{bg = ecblue, fg = white}
+\setbeamercolor{framesubtitle}{bg = ecblue, fg = eugold}
+\setbeamerfont{frametitle}{size = \normalsize, series = \bfseries}
+\setbeamerfont{framesubtitle}{size = \small, shape = \itshape}
+
+% Alerts
+\setbeamercolor{alerted text}{fg = ecred}
+
+% Blocks
+\setbeamercolor{block title}{fg = white, bg = ecblue}
+\setbeamercolor{block body}{fg = ecnavy, bg = lightblue}
+\setbeamercolor{alertblock title}{fg = white, bg = ecred}
+\setbeamercolor{alertblock body}{fg = ecnavy, bg = lightblue}
+\setbeamercolor{exampleblock title}{fg = ecnavy, bg = eugold}
+\setbeamercolor{exampleblock body}{fg = ecnavy, bg = lightblue}
+
+% Title page — clean JRC style: white bg, left blue stripe, dark title text
+% Slide canvas: 160mm × 90mm (aspectratio=169)
+\setbeamercolor{title}{fg = ecnavy}
+\setbeamercolor{subtitle}{fg = ecblue}
+\setbeamerfont{title}{size = \LARGE, series = \bfseries}
+\setbeamertemplate{title page}{%
+    \begin{tikzpicture}[remember picture, overlay]
+        % Left blue stripe (12mm wide, full height)
+        \fill[ecblue] (current page.north west)
+            rectangle ([xshift=12mm]current page.south west);
+        % Gold horizontal accent line (~60% width, vertically centred below title)
+        \draw[eugold, line width=2.5pt]
+            ([xshift=16mm, yshift=-43mm]current page.north west) --
+            ([xshift=150mm, yshift=-43mm]current page.north west);
+        % Title — large, dark navy, on white area
+        \node[anchor=north west, text width=136mm, align=left,
+              font=\LARGE\bfseries, text=ecnavy]
+            at ([xshift=16mm, yshift=-9mm]current page.north west)
+            {\inserttitle};
+        % Subtitle — below gold line, in pastel blue italic
+        \node[anchor=north west, text width=136mm, align=left,
+              font=\normalsize\itshape, text=ecblue]
+            at ([xshift=16mm, yshift=-49mm]current page.north west)
+            {\insertsubtitle};
+        % Author — bold navy
+        \node[anchor=north west, text width=136mm, align=left,
+              font=\normalsize\bfseries, text=ecnavy]
+            at ([xshift=16mm, yshift=-66mm]current page.north west)
+            {\insertauthor};
+        % Institution · date — small gray
+        \node[anchor=north west, text width=136mm, align=left,
+              font=\small, text=ecgray]
+            at ([xshift=16mm, yshift=-74mm]current page.north west)
+            {\insertinstitute\ \textbullet\ \insertdate};
+    \end{tikzpicture}%
+}
+
+% TOC
+\setbeamercolor{section in toc}{fg = ecblue}
+\setbeamercolor{subsection in toc}{fg = ecnavy}
+
+% Navigation
+\setbeamertemplate{navigation symbols}{}
+
+% Footer: thin gold line + institution name left, slide number right
+\setbeamertemplate{footline}{%
+    \begin{beamercolorbox}[wd=\paperwidth, ht=0.4pt]{frametitle}%
+        \color{eugold}\rule{\paperwidth}{0.4pt}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=\paperwidth, ht=5pt, dp=3pt,
+            leftskip=6pt, rightskip=6pt]{normal text}%
+        {\color{ecgray}\tiny F. Rentocchini, European Commission, JRC-Seville \hfill
+         \color{ecgray}\tiny \insertframenumber}%
+    \end{beamercolorbox}%
+}
+
+% Bullet points
+\settowidth{\leftmargini}{\usebeamertemplate{itemize item}}
+\addtolength{\leftmargini}{\labelsep}
+\setbeamercolor{enumerate item}{fg = ecblue}
+\setbeamertemplate{enumerate item}{\insertenumlabel.}
+\setbeamercolor{itemize item}{fg = ecblue}
+\setbeamertemplate{itemize item}[circle]
+\setbeamercolor{itemize subitem}{fg = jrcblue}
+\setbeamertemplate{itemize subitem}{$\rightarrow$}
+
+% --- Section transition frames — EC blue bg, gold text ------
+\newenvironment{transitionframe}{
+    \setbeamercolor{background canvas}{bg = ecblue}
+    \begin{frame}\color{white}\LARGE\centering
+}{
+    \end{frame}
+}
+
+% --- Auto-roadmap at each section ---------------------------
+\AtBeginSection[]{
+    \begin{frame}{Roadmap}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+
+% --- Packages -----------------------------------------------
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array, adjustbox, tabularx}
+\usepackage{threeparttable}
+\usepackage{setspace}
+\setstretch{1.15}
+\usepackage{multicol}
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=accent2, urlcolor=accent2, citecolor=accent2}
+
+% --- TikZ for DAGs ------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, calc, fit}
+
+% DAG style shortcuts
+\tikzset{
+    node/.style = {circle, draw=accent, fill=gray100, thick,
+                   minimum size=8mm, font=\small},
+    latent/.style = {circle, draw=accent, dashed, fill=white, thick,
+                     minimum size=8mm, font=\small},
+    arrow/.style = {-{Stealth[length=6pt]}, thick, color=jet},
+    redarrow/.style = {-{Stealth[length=6pt]}, thick, color=accent2},
+    bluearrow/.style = {-{Stealth[length=6pt]}, thick, color=accent},
+}
+
+% --- Highlighting box for equations -------------------------
+\newcommand{\highlight}[1]{%
+    \colorbox{eugold!50}{$\displaystyle #1$}}
+
+% --- Fix \input with tables ---------------------------------
+\makeatletter
+\let\input\@@input
+\makeatother
+
+% Suppress overfull warnings
+\vfuzz2pt
+\hfuzz2pt

@@ -1,0 +1,106 @@
+\documentclass[aspectratio=169]{beamer}
+
+% ============================================================
+% Lecture 3: Synthetic Control, RDD, and Shift-Share IV
+% PhD programme: Economics, Management and Methods for the
+% Sustainable Transition — University of Ferrara
+% Date: 7 May 2026 (2h: ~1h theory + 1h lab)
+% Author: Francesco Rentocchini
+% ============================================================
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% --- Packages ---
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{xcolor}
+
+% --- Bibliography ---
+\bibliographystyle{apalike}
+
+% --- Title info ---
+\title[Synth, RDD, Shift-Share]{%
+  Of Synthetic Realms, Discontinuities, and Shift-Shares:\\
+  Or: How I Learned to Stop Worrying and Love the Process}
+\subtitle{Lecture 3 — PhD Causal Inference, Ferrara 2026}
+\author{Francesco Rentocchini}
+\institute{JRC European Commission / University of Milan}
+\date{7 May 2026}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+% ============================================================
+\section{Synthetic Control}
+% ============================================================
+
+\begin{frame}{The Synthetic Control Method}
+  % TODO: Abadie, Diamond & Hainmueller (2010); donor pool; weights; synth
+\end{frame}
+
+\begin{frame}{Inference in Synthetic Control}
+  % TODO: permutation / placebo tests; p-values without standard errors
+\end{frame}
+
+% ============================================================
+\section{Regression Discontinuity Design}
+% ============================================================
+
+\begin{frame}{Sharp RDD}
+  % TODO: running variable; threshold; local randomisation; continuity assumption
+\end{frame}
+
+\begin{frame}{Bandwidth Selection and Robustness}
+  % TODO: Imbens-Kalyanaraman; rdrobust; donut RDD
+\end{frame}
+
+% ============================================================
+\section{Bartik / Shift-Share IV}
+% ============================================================
+
+\begin{frame}{The Bartik Instrument}
+  % TODO: industry shares (Rotemberg weights); growth shocks; exclusion restriction
+\end{frame}
+
+\begin{frame}{Borusyak \& Hull: Recentering}
+  % TODO: optimal formula instruments; recentering to satisfy exclusion
+\end{frame}
+
+% ============================================================
+\section{Lab Preview}
+% ============================================================
+
+\begin{frame}{Lab 3: RDD and Shift-Share in Stata}
+  \begin{block}{What we will do}
+    \begin{itemize}
+      \item Sharp RDD with \texttt{rdrobust} and \texttt{rddensity}
+      \item Shift-share IV construction and estimation
+      \item Rotemberg weights and sensitivity checks
+    \end{itemize}
+  \end{block}
+  \textbf{Script:} \texttt{Lab/L3\_rdd\_ssiv.do}
+\end{frame}
+
+% ============================================================
+% References
+% ============================================================
+
+\begin{frame}[allowframebreaks]{References}
+  \bibliography{../Bibliography_base}
+\end{frame}
+
+\end{document}
