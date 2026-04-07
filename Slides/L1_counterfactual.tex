@@ -17,10 +17,10 @@
 % --- Title ---------------------------------------------------
 \title['Cause We Are Living in a Counterfactual World]{%
   `Cause We Are Living in a Counterfactual World}
-\subtitle{Counterfactual Framework and Selection on Observables\\
-  \small Lecture 1 --- PhD Economics, Management and Methods for the Sustainable Transition,University of Ferrara}
+\subtitle{Lecture 1: Counterfactual Framework and Selection on Observables\\
+  {\small\normalfont\color{ecgray} PhD Economics, Management and Methods for the Sustainable Transition \textbullet\ University of Ferrara}}
 \author{Francesco Rentocchini}
-\institute{JRC European Commission / University of Milan}
+\institute{European Commission, JRC-Seville / DEMM, University of Milan}
 \date{5 May 2026}
 
 % ============================================================
@@ -116,7 +116,7 @@
 
 \begin{frame}{Three roads to a causal answer}
 
-  \begin{block}{Today: Selection on observables}
+  \begin{block}{Lecture 1 (Today): Selection on observables}
     We assume all confounders are \emph{measured}. Estimators: matching, IPW, doubly robust.
   \end{block}
 
@@ -151,7 +151,7 @@
   \end{tabular}
 
   \bigskip
-  \textbf{Switching equation} — what we actually observe:
+  \textbf{Switching equation} — what we actually observe (that is $Y_i$):
   \[
     Y_i = D_i \cdot Y_i(1) + (1 - D_i) \cdot Y_i(0)
   \]
@@ -161,6 +161,77 @@
     $Y_i(1)$ and $Y_i(0)$ both exist in principle for every unit.
     We observe at most \emph{one} of them. The other is the \textbf{counterfactual}.
   \end{alertblock}
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Potential outcomes: a complete (fictional) table}
+
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{tabular}{lcccc}
+        \toprule
+        Unit & $D_i$ & $Y_i(1)$ & $Y_i(0)$ & $\tau_i$ \\
+        \midrule
+        Alice  & 1 & 1 & 0 & \phantom{$-$}1 \\
+        Bob    & 1 & 0 & 0 & \phantom{$-$}0 \\
+        Carol  & 0 & 1 & 1 & \phantom{$-$}0 \\
+        Dan    & 0 & 0 & 0 & \phantom{$-$}0 \\
+        \bottomrule
+      \end{tabular}
+
+      \vspace{3mm}
+      \small In a fictional world we \emph{observe both} potential outcomes for every unit.
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{exampleblock}{Exercise}
+        Using the complete table, compute:
+        \begin{itemize}
+          \item $\text{ATE} = ?$
+          \item $\text{ATT} = ?$ \hfill (treated: Alice, Bob)
+          \item $\text{ATU} = ?$ \hfill (untreated: Carol, Dan)
+        \end{itemize}
+        \vspace{2mm}
+        \small Are they equal? What does that tell you?
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Potential outcomes: exercise solution}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{tabular}{lcccc}
+        \toprule
+        Unit & $D_i$ & $Y_i(1)$ & $Y_i(0)$ & $\tau_i$ \\
+        \midrule
+        Alice  & 1 & 1 & 0 & 1 \\
+        Bob    & 1 & 0 & 0 & 0 \\
+        Carol  & 0 & 1 & 1 & 0 \\
+        Dan    & 0 & 0 & 0 & 0 \\
+        \midrule
+        \multicolumn{4}{l}{\small $\text{ATE}$} & $\frac{1+0+0+0}{4} = \mathbf{0.25}$ \\[4pt]
+        \multicolumn{4}{l}{\small $\text{ATT}$ (Alice, Bob)} & $\frac{1+0}{2} = \mathbf{0.50}$ \\[4pt]
+        \multicolumn{4}{l}{\small $\text{ATU}$ (Carol, Dan)} & $\frac{0+0}{2} = \mathbf{0.00}$ \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{Are they equal?}
+        No: $\text{ATT} > \text{ATE} > \text{ATU}$.
+      \end{alertblock}
+
+      \vspace{3mm}
+      \textbf{What does that tell you?}\\[3pt]
+      Units who \emph{chose} treatment (Alice, Bob) gain more from it than those who did not. This is \textbf{positive selection into treatment}.
+
+      \vspace{3mm}
+      In the real world we cannot compute any of these directly — we observe only \emph{one} potential outcome per unit. That is why identification strategy matters.
+    \end{column}
+  \end{columns}
 \end{frame}
 
 % ------------------------------------------------------------
@@ -182,6 +253,10 @@
 
       \vspace{4mm}
       \small \alert{?} = never observed. This is a \textbf{missing data problem}, always.
+      \vspace{2mm}
+      \begin{block}{Naive solution}
+        Simple difference in outcomes: compares treated to untreated directly
+      \end{block}
     \end{column}
     \begin{column}{0.46\textwidth}
       \textbf{Average treatment effects:}
@@ -202,7 +277,7 @@
 
 % ------------------------------------------------------------
 
-\begin{frame}{Selection bias: what goes wrong with naive comparisons}
+\begin{frame}[shrink=10]{Selection bias: what goes wrong with naive comparisons}
 
   \textbf{Step 1.} The naive estimator compares treated to untreated:
   \[
@@ -254,6 +329,7 @@
     \end{align*}
     \smallskip
     \begin{itemize}
+      \item where $\pi$ is the share of treated units
       \item SDO $=$ ATT \emph{only if} selection bias $= 0$ (treatment independent of $Y_i(0)$)
       \item Intuition: sicker patients → hospital; harder workers → training; larger firms → M\&A
     \end{itemize}
@@ -290,62 +366,6 @@
 % ============================================================
 \section{Identification: from Description to Causality}
 % ============================================================
-
-% ------------------------------------------------------------
-
-\begin{frame}{A first attempt: just add controls to OLS}
-
-  \textbf{Idea:} if the bias comes from omitted variables, why not include them?
-  \[
-    Y_i = \alpha + \beta D_i + \gamma' X_i + \varepsilon_i
-  \]
-  $\hat\beta$ identifies ATT \emph{only if} $E[\varepsilon_i \mid D_i, X_i] = 0$ — i.e., no residual confounding.
-
-  \medskip
-  \textbf{Read the controls as a diagnostic:}
-
-  \begin{overprint}
-
-  \onslide<1>
-    \begin{block}{Coefficient falls after adding controls}
-      $\hat\beta^{\text{naive}} > \hat\beta^{\text{OLS+X}}$ — positive selection\\[3pt]
-      Treated units had \emph{better} baseline outcomes: e.g.\ more able workers self-select into training.\\
-      Controls absorb some of the spurious advantage. \textbf{Good sign} — you are correcting in the right direction.
-    \end{block}
-
-  \onslide<2>
-    \begin{block}{Coefficient rises after adding controls}
-      $\hat\beta^{\text{naive}} < \hat\beta^{\text{OLS+X}}$ — negative selection\\[3pt]
-      Treated units had \emph{worse} baseline outcomes: e.g.\ sicker patients received the drug.\\
-      The naive estimate was attenuated downward. Controls reveal a larger true effect.
-    \end{block}
-
-  \onslide<3>
-    \begin{alertblock}{Standard error rises after adding controls}
-      Happens when $X$ is \emph{highly collinear} with $D$ — controls absorb most variation in treatment.\\[3pt]
-      Extreme case: $X$ is a near-perfect predictor of $D$ $\Rightarrow$ \textbf{multicollinearity}, very imprecise $\hat\beta$.\\
-      Also: small within-cell sample sizes inflate SEs even without collinearity.
-    \end{alertblock}
-
-  \onslide<4>
-    \begin{alertblock}{Standard error falls after adding controls}
-      $X$ explains residual variation in $Y$ without being collinear with $D$.\\[3pt]
-      Controls reduce $\hat\sigma^2_\varepsilon$ $\Rightarrow$ smaller SEs — more precise estimate.
-      This is the \emph{best case}: controls both correct bias \emph{and} improve precision.
-    \end{alertblock}
-
-  \onslide<5->
-    \begin{alertblock}{Sign flip after adding controls — the most alarming case}
-      $\hat\beta^{\text{naive}} > 0$ but $\hat\beta^{\text{OLS+X}} < 0$ (or vice versa).
-      Omitted variable was so strongly correlated with $D$ that it \emph{reversed} the raw association.\\[2pt]
-      \textbf{Classic examples:} hospitals $\uparrow$ mortality (naive) $\to$ negative after controlling for baseline health; elite schools $\uparrow$ wages (naive) $\to$ near-zero after controlling for ability.\\[2pt]
-      \alert{A sign flip is a red flag: OLS with controls may still be insufficient — CIA may not hold.}
-    \end{alertblock}
-
-  \end{overprint}
-\end{frame}
-
-% ------------------------------------------------------------
 
 \begin{frame}{Random assignment solves the problem}
 
@@ -419,6 +439,125 @@
   \]
   Every value of $X$ must appear in both treated and control groups. Otherwise, we extrapolate.
 \end{frame}
+
+
+% ------------------------------------------------------------
+
+\begin{frame}[shrink=3]{A first attempt: just add controls to OLS}
+
+  \textbf{Idea:} if the bias comes from omitted variables, why not include them?
+  \[
+    Y_i = \alpha + \beta D_i + \gamma' X_i + \varepsilon_i
+  \]
+  $\hat\beta$ identifies ATT \emph{only if} $E[\varepsilon_i \mid D_i, X_i] = 0$ — i.e., no residual confounding.
+
+  \medskip
+  \textbf{Read the controls as a diagnostic:}
+
+  \begin{overprint}
+
+  \onslide<1>
+    \begin{columns}[T]
+      \begin{column}{0.60\textwidth}
+        \begin{block}{Coefficient falls after adding controls}
+          $\hat\beta^{\text{naive}} > \hat\beta^{\text{OLS+X}}$ — positive selection\\[3pt]
+          Treated units had \emph{better} baseline outcomes: e.g.\ more able workers self-select into training.\\
+          Controls absorb some of the spurious advantage. \textbf{Good sign} — you are correcting in the right direction.
+        \end{block}
+      \end{column}
+      \begin{column}{0.36\textwidth}
+        \centering\vspace{4pt}
+        % DAG: X is a positive confounder — backdoor paths in red dashed
+        \begin{tikzpicture}[
+            dn/.style={circle, draw=ecblue, fill=lightblue, thick,
+                       minimum size=8mm, font=\small\bfseries},
+            da/.style={-{Stealth[length=5pt]}, thick, ecnavy},
+            bk/.style={-{Stealth[length=5pt]}, thick, ecred, dashed}]
+          \node[dn] (X) at (1.0, 1.8) {$X$};
+          \node[dn] (D) at (0.0, 0.0) {$D$};
+          \node[dn] (Y) at (2.0, 0.0) {$Y$};
+          \draw[bk] (X) -- (D) node[midway, left,  font=\footnotesize] {$+$};
+          \draw[bk] (X) -- (Y) node[midway, right, font=\footnotesize] {$+$};
+          \draw[da] (D) -- (Y) node[midway, below, font=\footnotesize] {$\beta$};
+        \end{tikzpicture}\\[3pt]
+        {\scriptsize\color{ecred} $X$ biases $\hat\beta^{\text{naive}}$ upward}
+      \end{column}
+    \end{columns}
+
+  \onslide<2>
+    \begin{columns}[T]
+      \begin{column}{0.60\textwidth}
+        \begin{block}{Coefficient rises after adding controls}
+          $\hat\beta^{\text{naive}} < \hat\beta^{\text{OLS+X}}$ — negative selection\\[3pt]
+          Treated units had \emph{worse} baseline outcomes: e.g.\ sicker patients received the drug.\\
+          The naive estimate was attenuated downward. Controls reveal a larger true effect.
+        \end{block}
+      \end{column}
+      \begin{column}{0.36\textwidth}
+        \centering\vspace{4pt}
+        % DAG: X→D positive, X→Y negative — backdoor attenuates true effect
+        \begin{tikzpicture}[
+            dn/.style={circle, draw=ecblue, fill=lightblue, thick,
+                       minimum size=8mm, font=\small\bfseries},
+            da/.style={-{Stealth[length=5pt]}, thick, ecnavy},
+            bk/.style={-{Stealth[length=5pt]}, thick, ecred, dashed}]
+          \node[dn] (X) at (1.0, 1.8) {$X$};
+          \node[dn] (D) at (0.0, 0.0) {$D$};
+          \node[dn] (Y) at (2.0, 0.0) {$Y$};
+          \draw[bk] (X) -- (D) node[midway, left,  font=\footnotesize] {$+$};
+          \draw[bk] (X) -- (Y) node[midway, right, font=\footnotesize] {$-$};
+          \draw[da] (D) -- (Y) node[midway, below, font=\footnotesize] {$\beta$};
+        \end{tikzpicture}\\[3pt]
+        {\scriptsize\color{ecred} $X$ biases $\hat\beta^{\text{naive}}$ downward}
+      \end{column}
+    \end{columns}
+
+  \onslide<3>
+    \begin{columns}[T]
+      \begin{column}{0.60\textwidth}
+        \begin{alertblock}{Sign flip — the most alarming case}
+          $\hat\beta^{\text{naive}} > 0$ but $\hat\beta^{\text{OLS+X}} < 0$ (or vice versa).
+          Omitted variable so strongly correlated with $D$ that it \emph{reversed} the raw association.\\[2pt]
+          \textbf{Classic examples:} hospitals $\uparrow$ mortality (naive) $\to$ negative after controlling for baseline health; elite schools $\uparrow$ wages (naive) $\to$ near-zero after controlling for ability.\\[2pt]
+          \alert{A sign flip is a red flag: OLS with controls may still be insufficient — CIA may not hold.}
+        \end{alertblock}
+      \end{column}
+      \begin{column}{0.36\textwidth}
+        \centering\vspace{4pt}
+        % DAG: backdoor dominates — strong confounding reverses sign
+        \begin{tikzpicture}[
+            dn/.style={circle, draw=ecblue, fill=lightblue, thick,
+                       minimum size=8mm, font=\small\bfseries},
+            da/.style={-{Stealth[length=5pt]}, thick, ecnavy},
+            bk/.style={-{Stealth[length=5pt]}, thick, ecred, dashed}]
+          \node[dn] (X) at (1.0, 1.8) {$X$};
+          \node[dn] (D) at (0.0, 0.0) {$D$};
+          \node[dn] (Y) at (2.0, 0.0) {$Y$};
+          \draw[bk] (X) -- (D) node[midway, left,  font=\footnotesize] {$\boldsymbol{++}$};
+          \draw[bk] (X) -- (Y) node[midway, right, font=\footnotesize] {$\boldsymbol{{-}{-}}$};
+          \draw[da] (D) -- (Y) node[midway, below, font=\footnotesize] {$\beta$};
+        \end{tikzpicture}\\[3pt]
+        {\scriptsize\color{ecred} backdoor overwhelms $\beta$ $\Rightarrow$ sign flip}
+      \end{column}
+    \end{columns}
+
+  \onslide<4>
+    \begin{alertblock}{Standard error rises after adding controls}
+      Happens when $X$ is \emph{highly collinear} with $D$ — controls absorb most variation in treatment.\\[3pt]
+      Extreme case: $X$ is a near-perfect predictor of $D$ $\Rightarrow$ \textbf{multicollinearity}, very imprecise $\hat\beta$.\\
+      Also: small within-cell sample sizes inflate SEs even without collinearity.
+    \end{alertblock}
+
+  \onslide<5->
+    \begin{alertblock}{Standard error falls after adding controls}
+      $X$ explains residual variation in $Y$ without being collinear with $D$.\\[3pt]
+      Controls reduce $\hat\sigma^2_\varepsilon$ $\Rightarrow$ smaller SEs — more precise estimate.
+      This is the \emph{best case}: controls both correct bias \emph{and} improve precision.
+    \end{alertblock}
+
+  \end{overprint}
+\end{frame}
+% ------------------------------------------------------------
 
 % ============================================================
 \section{Estimators for Selection on Observables}
@@ -516,8 +655,6 @@
     \end{column}
   \end{columns}
 
-  \medskip
-  \textbf{Stata:} \texttt{ssc install cem} $\rightarrow$ \texttt{cem age (10 20 30 40) educ ..., treatment(D)}
 \end{frame}
 
 % ------------------------------------------------------------
@@ -581,7 +718,7 @@
       \right]
   \]
 
-  Equivalently: run \texttt{reg Y i.D [aw=w]} with weights
+  This a weighted OLS, with weights
   $w_i = D_i + (1-D_i)\dfrac{\hat{p}(X_i)}{1-\hat{p}(X_i)}$.
 
   \bigskip
@@ -623,14 +760,88 @@
     You don't need both to be right --- but you should try hard on both.
   \end{block}
 
-  \medskip
-  \textbf{Stata:} \texttt{teffects ra} (outcome regression) \quad \texttt{teffects aipw} (doubly robust)
 \end{frame}
 
 % ============================================================
 \section{Lab: Titanic and LaLonde}
 % ============================================================
 
+% ------------------------------------------------------------
+\begin{frame}[shrink=8]{Dataset 1: the Titanic}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \textbf{Background}\\[3pt]
+      RMS Titanic sank on 15 April 1912. Of the 2{,}224 people on board, 1{,}502 died. Evacuation followed a ``women and children first'' protocol; lifeboat access differed sharply by deck.
+
+      \smallskip
+      \textbf{Data} \citep{Dawson1995}\\[3pt]
+      Passenger manifest: ticket class (1st/2nd/3rd), sex, age group, survival indicator.
+
+      \smallskip
+      \textbf{Causal question}\\[3pt]
+      Did being a \emph{first-class} passenger \emph{cause} higher survival --- or does the raw gap reflect compositional differences in sex and age across classes?
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{block}{Key results (raw data)}
+        \begin{tabular}{lc}
+          \toprule
+          Group & Survival rate \\
+          \midrule
+          1st class & 63\% \\
+          2nd class & 47\% \\
+          3rd class & 24\% \\
+          \midrule
+          Male   & 19\% \\
+          Female & 74\% \\
+          \bottomrule
+        \end{tabular}
+      \end{block}
+      \smallskip
+      \begin{alertblock}{The identification problem}
+        1st-class passengers were disproportionately \emph{female} and \emph{adult} — both independently associated with survival. Naive gap conflates class effect with composition.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}[shrink=8]{Dataset 2: LaLonde (1986) and the NSW programme}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \textbf{Background}\\[3pt]
+      NSW demonstration (mid-1970s): \emph{randomised} job-training for disadvantaged workers — long-term unemployed, ex-offenders, school drop-outs. Random assignment into training ($D=1$) or control ($D=0$).
+
+      \smallskip
+      \textbf{Data} \citep{lalonde1986}\\[3pt]
+      \begin{itemize}
+        \item \textbf{Experimental:} NSW treated + NSW controls
+        \item \textbf{Observational:} NSW treated + CPS/PSID controls
+        \item Covariates: age, education, race, marital status, earnings 1974--75
+        \item Outcome: real earnings 1978
+      \end{itemize}
+
+      \smallskip
+      \textbf{Experimental benchmark}\\[3pt]
+      Training raised earnings by $\approx\$1{,}794$ (statistically significant).
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{LaLonde's bombshell \citep{lalonde1986}}
+        Swapping to CPS/PSID controls and re-running OLS and Heckman selection: estimates ranged from $-\$15{,}000$ to $+\$3{,}500$.\\[3pt]
+        Observational methods fail when selection is driven by unobservables.
+      \end{alertblock}
+      \smallskip
+      \begin{block}{The rehabilitation \citep{dehejia2002}}
+        PS matching on the same observational data recovered estimates close to \$1{,}794 — launching the matching literature and the debate on when CIA is credible.
+      \end{block}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------
 \begin{frame}{Lab overview}
 
   \begin{columns}[T]

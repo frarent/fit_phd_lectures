@@ -106,8 +106,8 @@
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=\paperwidth, ht=5pt, dp=3pt,
             leftskip=6pt, rightskip=6pt]{normal text}%
-        {\color{ecgray}\tiny F. Rentocchini, European Commission, JRC-Seville \hfill
-         \color{ecgray}\tiny \insertframenumber}%
+        {\color{ecgray}\tiny F. Rentocchini / European Commission, JRC-Seville \& DEMM, University of Milan \hfill
+         \color{ecgray}\tiny \ifnum\insertframenumber>1 \insertframenumber\fi}%
     \end{beamercolorbox}%
 }
 
@@ -145,9 +145,13 @@
 \usepackage{setspace}
 \setstretch{1.15}
 \usepackage{multicol}
-\usepackage{microtype}
+\usepackage[protrusion=false,expansion=false]{microtype}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=accent2, urlcolor=accent2, citecolor=accent2}
+\pdfstringdefDisableCommands{%
+  \def\translate#1{#1}%
+  \def\color#1{}%
+}
 
 % --- TikZ for DAGs ------------------------------------------
 \usepackage{tikz}
