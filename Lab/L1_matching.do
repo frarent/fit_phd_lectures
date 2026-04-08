@@ -7,9 +7,12 @@
 *           Lab/Titanic and Lab/Lalonde — github.com/scunning1975/mixtape
 * ----------------------------------------------------------------------------
 * OUTPUTS
-*   Figures/L1_pscore_overlap.png   — propensity score distribution before trimming
-*   Figures/L1_pscore_trimmed.png   — propensity score distribution after trimming
-*   Figures/L1_estimates.png        — coefficient comparison plot
+*   Figures/L1_surv_by_class.png         — Titanic: survival rate by class (unadjusted)
+*   Figures/L1_confounders_by_class.png  — Titanic: covariate composition by class
+*   Figures/L1_surv_class_sex.png        — Titanic: survival by class x sex
+*   Figures/L1_pscore_overlap.png        — propensity score distribution before trimming
+*   Figures/L1_pscore_trimmed.png        — propensity score distribution after trimming
+*   Figures/L1_estimates.png             — coefficient comparison plot
 * ----------------------------------------------------------------------------
 * PACKAGES NEEDED (run once):
 *   ssc install cem, replace
@@ -40,6 +43,60 @@ set scheme plotplainblind
 * 1.1 Load data
 * ----------------------------------------------------------------------------
 use "https://github.com/scunning1975/mixtape/raw/master/titanic.dta", clear
+
+
+* ----------------------------------------------------------------------------
+* 1.2a Graphical descriptives
+* ----------------------------------------------------------------------------
+
+* Label class for readable graph axes
+label define classlbl 1 "First" 2 "Second" 3 "Third" 4 "Crew"
+label values class classlbl
+
+* (a) Survival rate by class — the unadjusted outcome (confounded)
+preserve
+    collapse (mean) survived, by(class)
+    graph bar survived, over(class, label(labsize(small))) ///
+        bar(1, color(navy%70)) ///
+        ytitle("Survival rate", size(small)) ///
+        title("Survival Rate by Passenger Class", size(medsmall)) ///
+        subtitle("Unadjusted -- confounded by gender and age", size(small)) ///
+        blabel(bar, format(%4.2f) size(vsmall)) ///
+        scheme(plotplainblind)
+    graph export "${proj_path}/Figures/L1_surv_by_class.png", replace width(3000)
+restore
+
+* (b) Covariate composition by class — shows why class predicts survival
+*     independently of any causal effect
+preserve
+    gen female = 1 - sex   // sex==1 is male in this dataset
+    collapse (mean) female (mean) adult=age, by(class)
+    graph bar female adult, over(class, label(labsize(small))) ///
+        bar(1, color(navy%70)) bar(2, color(orange%70)) ///
+        legend(order(1 "Female" 2 "Adult") size(small) position(11) ring(0)) ///
+        ytitle("Share", size(small)) ///
+        title("Covariate Composition by Class", size(medsmall)) ///
+        subtitle("Confounders differ across classes", size(small)) ///
+        scheme(plotplainblind)
+    graph export "${proj_path}/Figures/L1_confounders_by_class.png", replace width(3000)
+restore
+
+* (c) Survival by class x sex — within-group rates motivate stratification
+preserve
+    gen female = 1 - sex
+    collapse (mean) survived, by(class female)
+    label define sexlbl 0 "Male" 1 "Female"
+    label values female sexlbl
+    graph bar survived, over(female, label(labsize(small))) over(class) ///
+        bar(1, color(gs8%80)) bar(2, color(navy%80)) ///
+        ytitle("Survival rate", size(small)) ///
+        title("Survival Rate by Class and Sex", size(medsmall)) ///
+        subtitle("Within-group rates motivate stratification", size(small)) ///
+        legend(order(1 "Male" 2 "Female") size(small)) ///
+        scheme(plotplainblind)
+    graph export "${proj_path}/Figures/L1_surv_class_sex.png", replace width(3000)
+restore
+
 
 * ----------------------------------------------------------------------------
 * 1.2 Create treatment and stratum indicators
@@ -100,7 +157,7 @@ foreach stratum in adult_male adult_female child_male child_female {
     local wt = `N_`stratum'' / `N'
     local ate = `ate' + `wt' * `diff_`stratum''
 }
-di as result "Stratification ATE  = " %6.4f `ate'
+
 
 * Step 3: ATT weights = stratum share among first-class (treated)
 local att = 0
@@ -126,6 +183,10 @@ reg survived i.first_class, r
 * treated (first class) and untreated groups is very different.
 * ATT asks: what is the effect for first-class passengers?
 * ATE asks: what would the average effect be if we randomly assigned class?
+
+
+
+
 
 * ============================================================================
 * EXERCISE 2: LALONDE (1986) — Job Training and Earnings
@@ -208,7 +269,8 @@ twoway (histogram pscore if treat==1, color(navy%60) lcolor(navy) ///
 graph export "${proj_path}/Figures/L1_pscore_overlap.png", replace width(3000)
 
 * Problem: CPS controls have very low propensity scores — poor overlap
-su pscore, detail
+
+bys data_id: su pscore, detail
 
 * ----------------------------------------------------------------------------
 * 2.4 Trim to common support — permanent for all subsequent estimators
@@ -250,6 +312,22 @@ teffects ipw (re78) (treat $covs, logit), atet
 local b_tipw  = e(b)[1,1]
 local se_tipw = sqrt(e(V)[1,1])
 
+* to get very similar results one would need to
+** re-estimate pscore on trimmed sample as in teffects
+** normalise weights (teffects uses Hajek weigth normalisation)
+    qui logit treat $covs    // already on trimmed sample
+    predict pscore2, pr
+
+    gen ipw_wt2 = treat + (1-treat) * pscore2/(1-pscore2)
+
+    * Normalise weights (Hajék)
+    sum ipw_wt2 if treat==0
+    replace ipw_wt2 = ipw_wt2 / r(mean) if treat==0
+
+    * Pure IPW
+    reg re78 i.treat [aw=ipw_wt2], r
+    drop pscore2 ipw_wt2
+
 * ----------------------------------------------------------------------------
 * 2.6 Part C3: Nearest-neighbour propensity score matching
 * ----------------------------------------------------------------------------
@@ -272,6 +350,24 @@ di as text _n "=== REGRESSION ADJUSTMENT ==="
 teffects ra (re78 $covs) (treat), atet
 local b_ra  = e(b)[1,1]
 local se_ra = sqrt(e(V)[1,1])
+* OLS equivalent for the coefficient
+    * Step 1: outcome model for control units
+    qui reg re78 $covs if treat==0
+    predict mu0, xb          // predicted Y(0) for everyone
+
+    * Step 2: outcome model for treated units  
+    qui reg re78 $covs if treat==1
+    predict mu1, xb          // predicted Y(1) for everyone
+
+    * Step 3: ATT = mean of (mu1 - mu0) over treated units only
+    gen att_i = mu1 - mu0
+    sum att_i if treat==1
+    di as result "RA ATT (manual) = " %7.1f r(mean)
+
+    drop mu0 mu1 att_i
+
+* for standard errors need to bootstrap as it is the difference of two estimated values
+
 
 * ----------------------------------------------------------------------------
 * 2.8 Part C5: Coarsened Exact Matching (CEM)
@@ -396,8 +492,9 @@ preserve
         ytitle("") ///
         xtitle("ATT estimate (1978 earnings, USD)") ///
         title("LaLonde: Estimators vs. Experimental Benchmark", size(medsmall)) ///
-        note("Blue line = experimental benchmark (~{c S$}1,794). 95% CIs shown." ///
-             "All PS-based estimators use trimmed sample (0.1 < p-score < 0.9).") ///
+        note("Blue line = experimental benchmark ($ 1,794). 95% CIs shown." ///
+             "All PS-based estimators use trimmed sample (0.1 < p-score < 0.9).", ///
+             size(vsmall)) ///
         legend(off) scheme(plotplainblind)
 
     graph export "${proj_path}/Figures/L1_estimates.png", replace width(4000)

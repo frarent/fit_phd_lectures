@@ -139,3 +139,60 @@ Each stratum contributes in proportion to how many *treated* units are in it. Th
 ### Why subclassification makes this explicit
 
 Unlike OLS (which implicitly weights by variance in treatment within cells, with no transparent connection to any estimand), subclassification forces you to state the weights before computing the estimate. This transparency is one of its main virtues, and a useful pedagogical bridge to the propensity score literature where the ATE/ATT distinction reappears in the choice of IPW weights.
+
+---
+
+## On sections 1.4–1.5: what the calculation does and why
+
+**Source:** `Lab/L1_matching.do`, sections 1.4–1.5
+
+### What 1.4 does
+
+The naive comparison (first class vs. rest) is confounded: first-class passengers are disproportionately female and adult, and women/children received lifeboat priority. To compare like with like, we split the data into four strata defined by sex × age:
+
+| Stratum | Who |
+|---|---|
+| `adult_male` | Adult men |
+| `adult_female` | Adult women |
+| `child_male` | Male children |
+| `child_female` | Female children |
+
+Within each stratum, every passenger has the same sex and age, so those variables no longer confound the comparison. We compute:
+
+```
+diff = (survival rate, first class) − (survival rate, non-first-class)
+```
+
+separately in each group. The key result: within-stratum differences can be small or even negative even though the raw gap is large — that is the confounding at work.
+
+### What 1.5 does
+
+We now have four local treatment effects and need a single summary. The choice of weights determines the estimand:
+
+- **ATE:** weight each stratum by its share in the full population. Answers: what would happen to a randomly assigned passenger?
+- **ATT:** weight by share among first-class (treated). Answers: what was the effect for those who actually travelled first class?
+- **ATU:** weight by share among non-first-class (untreated). Answers: what would have been the effect for those who did not travel first class?
+
+ATE, ATT and ATU diverge because first-class passengers were compositionally different (more women, more adults). This is the core demonstration that the estimand is a real choice with real consequences.
+
+---
+
+## On the CIA in the Titanic exercise: remaining confounders after stratifying on sex and age
+
+**Source:** `Lab/L1_matching.do`, sections 1.4–1.5 — discussion prompted by student question
+
+The stratification controls for sex and age, but CIA requires that *all* confounders are accounted for. The ATE/ATT/ATU estimates are still likely biased. Plausible remaining confounders:
+
+**Physical location on the ship.** Third-class cabins were deep in the stern, farthest from the boat deck. Within any sex × age stratum, non-first-class passengers had a longer, more obstructed path to lifeboats.
+
+**Nationality and language.** Third-class passengers were disproportionately non-English-speaking immigrants. Crew evacuation instructions were in English; language barriers slowed response time independently of sex and age.
+
+**Travelling alone vs. with family.** Families may have been treated differently during boarding, and group coordination affects survival. Family size correlates with class (immigrant groups often travelled together).
+
+**Time of awareness.** First-class cabins were closer to the bridge. First-class passengers were alerted earlier, giving a better lifeboat boarding position — a mechanism separate from any preferential crew treatment.
+
+**Physical fitness within "adult."** The binary adult/child split is coarse. A 25-year-old and a 70-year-old are coded identically, but fitness affects survival capacity and age-within-adult correlates with class.
+
+### The broader teaching point
+
+The CIA is fundamentally untestable. This is why researchers prefer quasi-experimental designs (DiD, RDD, IV) when available: they impose restrictions on the assignment mechanism rather than relying on the researcher's ability to observe and control all confounders. The Titanic exercise illustrates this limitation in a concrete, intuitive setting — even a careful stratification on the most obvious confounders leaves many plausible back-door paths open.
