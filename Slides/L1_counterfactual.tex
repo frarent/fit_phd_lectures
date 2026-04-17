@@ -72,7 +72,56 @@
   \end{columns}
 \end{frame}
 
+
+% ---- Hume's challenge ----------------------------------------
+
+\begin{frame}{Hume's challenge: we infer causation, we never observe it}
+      \small Hume, \emph{Treatise} (1739) \& \emph{Enquiry} (1748):
+      \begin{itemize}
+        \item We observe \textbf{sequences}: flame touches paper $\to$ paper burns
+        \item We observe \textbf{regularities}: this always happens
+        \item We \emph{never} observe the necessary connection itself
+        \item ``Causal power'' is \alert{constant conjunction + habit of expectation} ---
+              a feature of our \emph{minds}, not the world
+      \end{itemize}
+      \smallskip
+      \begin{block}{\small Hume's inescapable lesson}
+        \footnotesize
+        Every causal claim adds assumptions \textbf{beyond what the data contain.} The task: make those assumptions explicit.
+      \end{block}
+\end{frame}
+
+% ---- 300-year intellectual roadmap ---------------------------
+
+\begin{frame}{Three centuries of causal thinking: a roadmap}
+
+  {\footnotesize\renewcommand{\arraystretch}{1.35}%
+  \begin{tabular}{@{}p{2.9cm} p{1.6cm} p{8.4cm}@{}}
+    \toprule
+    \textbf{Who} & \textbf{When} & \textbf{Key move} \\
+    \midrule
+    Hume              & 1739          & Stated the problem: causation is inferred, never directly observed \\
+    Mill              & 1843          & Method of difference: compare units differing in one cause only \\
+    Galton \& Pearson & 1880s--1900s  & Formalised correlation --- powerful tool, but \alert{conflated} with causation \\
+    Fisher            & 1925          & Randomisation: \emph{design} beats analysis --- balance confounders by chance \\
+    Neyman / Rubin    & 1923\,/\,1974 & Potential outcomes $Y_i(1)-Y_i(0)$: put the counterfactual at the centre \\
+    Haavelmo / Cowles & 1944--55      & Structural models + IV: theory-driven identification from observational data \\
+    Pearl             & 1995          & DAGs: graphical language for assumptions and identification conditions \\
+    Angrist, Card, Krueger & 1990s--  & \textbf{Credibility revolution}: quasi-experiments, design-based identification \\
+    \bottomrule
+  \end{tabular}}
+\end{frame}
+
 % ------------------------------------------------------------
+
+% ---- Fallacy infographic -------------------------------------
+
+\begin{frame}{The two-way failure of correlation}
+  \centering
+  \includegraphics[width=\textwidth,height=0.80\textheight,keepaspectratio]{../Figures/L1_fallacy.png} \\
+  \smallskip
+  {\scriptsize Source: \citet{chavez2026}}
+\end{frame}
 
 \begin{frame}{The ventilator problem}
 
@@ -133,6 +182,15 @@
   All three methods answer the same question with different \textbf{identifying assumptions}. \\
   The assumption is always a claim about the data-generating process — not about the data itself.
 \end{frame}
+
+
+% --- Casual methods  over time -----------------------------------------
+\begin{frame}[shrink=5]{Casual methods over time}
+  \centering
+  \includegraphics[width=0.7\textwidth]{../Figures/L1_did_growth1.png} \\
+  \citet{garg2025causal}
+\end{frame}
+
 
 % ============================================================
 \section{The Potential Outcomes Framework}
