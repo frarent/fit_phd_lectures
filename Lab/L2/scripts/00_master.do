@@ -47,7 +47,7 @@ net set ado "stata_packages"
 *=============================================================================*
 
 // Install required packages
-global install_packages  1
+global install_packages  0
 
 global housekeep 0
 

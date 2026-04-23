@@ -31,8 +31,7 @@ set seed 12345
 * ----------------------------------------------------------------------------
 use "${data_path}/dpt_excel.dta", clear
 
-keep id year treated post2 new_position lagi dep_transfer_horizontal ///
-     tot_premiale VA_percap unemp_rate uni_name_enc w_ipw_pre
+
 
 label var id                      "Department identifier"
 label var year                    "Year"
