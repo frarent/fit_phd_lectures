@@ -35,8 +35,6 @@ clear all
 set more off
 set seed 12345
 
-global proj_path ".."   // repo root when running from Lab/ subfolder
-
 set scheme plotplainblind
 
 * ============================================================================
@@ -53,7 +51,7 @@ set scheme plotplainblind
 * ============================================================================
 
 * ---- Path to DoE data -------------------------------------------------------
-global doe_data "../material/lab/dpt_of_excellence-main/dpt_of_excellence-main/data/raw_data/data_for_analysis.dta"
+global doe_data "data/dtp_excel.dta"
 
 * ----------------------------------------------------------------------------
 * 1.1 Load and inspect

@@ -386,28 +386,44 @@
 \section{Controls in DiD: Handle with Care}
 % ============================================================
 
-\begin{frame}{Controls in DiD are not like controls in OLS}
+\begin{frame}[shrink=5]{Controls in DiD are not like controls in OLS}
 
   \textbf{In cross-sectional OLS}: controls absorb confounders that bias the coefficient of interest.
 
-  \medskip
+  \smallskip
   \textbf{In DiD}: the design already removes time-invariant differences. Controls serve a \emph{different} purpose:
   they help justify \textbf{conditional parallel trends} when unconditional trends differ.
 
-  \bigskip
-  \begin{alertblock}{The problem with ``just adding controls'' to TWFE \citep{huntingtonklein2023}}
-    If covariates are \textbf{time-varying}, including them in TWFE can introduce new bias:
+  \medskip
+  \begin{alertblock}{Problem 1 — Bad controls \citep{huntingtonklein2023}}
+    If covariates are \textbf{time-varying}, including them in TWFE introduces new bias:
     \begin{itemize}
-      \item A post-treatment covariate that is itself affected by treatment is a \emph{bad control}
-      \item Pre-treatment covariate levels are safe; their post-treatment realisations are not
-      \item Matching on pre-treatment values (or interacting covariates with time) is the correct approach
+      \item A post-treatment covariate affected by treatment is a \emph{collider} — conditioning on it opens a backdoor path
+      \item Pre-treatment levels are safer; post-treatment realisations of the same variable are not
     \end{itemize}
   \end{alertblock}
 
   \medskip
-  \textbf{Safe strategies}: include only \emph{pre-treatment} covariate values; use propensity-score weighting;
-  or use the doubly-robust CS estimator which handles covariates correctly by design.
+  \begin{alertblock}{Problem 2 — Weighting: from conditional ATT to $\hat\beta_{treat}$ \citep{bakerdifference}}
+    Even with correctly chosen pre-treatment covariates (correct, well measured and correct functional form!), $\hat\beta_{treat}$ from regression DiD
+    \textbf{does not recover $ATT(2)$} unless treatment effects are constant across covariate strata (additional assumption).
+    \begin{itemize}
+      \item $\hat\beta_{treat}$ is a weighted average of stratum-specific $ATT_{X_i}(2)$ with \emph{non-convex} weights
+      \item Overweights strata rare among treated; underweights strata common among treated
+      \item Can be \alert{negative} even when every $ATT_{X_i}(2) > 0$
+    \end{itemize}
+  \end{alertblock}
 
+
+\end{frame}
+
+\begin{frame}{Safer strategies}
+  \begin{enumerate}
+    \item unconditional parallel trends, but is it credible?
+    \item pre-treatment values only: averages? not too close to the treatement date?
+    \item propensity-score weighting; 
+    \item doubly-robust CS estimator: targets $ATT(2)$ directly and handles both problems by design but by default it takes the initial value and treats the variable as time invariant
+  \end{enumerate}
 \end{frame}
 
 % ============================================================
@@ -420,18 +436,29 @@
   \begin{itemize}
     \item US states adopt right-to-carry laws in different years
     \item Firms undergo M\&A in different waves
-    \item Italian departments receive the Excellence award in a single cohort (2018) — but evaluated vs.\ control departments at different distances in calendar time
+    \item Firms introduce robots in production processes in different years 
   \end{itemize}
 
   \medskip
   With staggered timing and multiple cohorts, TWFE still runs fine — but what does $\hat\delta$ identify?
+  \medskip
 
-  \begin{alertblock}{The Bacon (2021) insight}
+  \begin{alertblock}{\citet{goodman2021} insight}
     TWFE with staggered adoption is a \textbf{variance-weighted average of all possible $2\times 2$ DiDs} —
     including comparisons that use \emph{already-treated} units as controls.
     These ``forbidden comparisons'' can produce negative weights and contaminate the estimate.
   \end{alertblock}
 
+\end{frame}
+
+\begin{frame}{TWFE comparisons}
+  \centering
+  \includegraphics[width=0.75\textwidth]{../Figures/L2_bacon_goodman_full.png}
+\end{frame}
+
+\begin{frame}{TWFE comparisons}
+  \centering
+  \includegraphics[width=0.75\textwidth]{../Figures/L2_bacon_goodman.png}
 \end{frame}
 
 % -------------------------------------------------------
@@ -457,6 +484,37 @@
   \]
   If treatment effects \emph{grow over time} ($ATT_k^{Post} > ATT_k^{Mid}$), the heterogeneity bias is \alert{negative},
   and TWFE can \alert{flip sign}.
+
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{A complementary lens: negative implicit weights}
+
+  Rewrite TWFE not as 2$\times$2 DDs but as a weighted sum of
+  \emph{cell-level} treatment effects \citep{deChaisemartin2020}:
+  \[
+    \hat\delta^{\,TWFE} = \sum_{\ell,t} w_{\ell t}\cdot ATT(\ell,t)
+  \]
+
+  \begin{alertblock}{The problem}
+    Some $w_{\ell t}$ are \textbf{negative} $\rightarrow$ TWFE \emph{subtracts}
+    positive treatment effects from the estimate.
+  \end{alertblock}
+
+  \smallskip
+  \textbf{Why negative?}
+  \begin{itemize}
+    \item FE demeaning uses already-treated units as a ``control''
+          for later cohorts
+    \item Their demeaned treatment indicator is \emph{below} the unit mean
+          in later periods $\rightarrow$ enters the regression with a negative sign
+    \item Result: large late-period ATTs of early-treated cohorts get
+          \alert{subtracted} from $\hat\delta^{\,TWFE}$
+  \end{itemize}
+
+  \smallskip
+  \textbf{Note:} same pathology as Bacon's heterogeneity bias —
+  two descriptions of ``already-treated as control''.
 
 \end{frame}
 
@@ -514,7 +572,7 @@
 \begin{frame}{The forward-engineering response}
 
   The Bacon decomposition \emph{diagnoses} the problem but does not solve it.
-  A new generation of estimators avoids the forbidden comparisons by design \citep{roth2023what}.
+  A new generation of estimators avoids the forbidden comparisons by design.
 
   \medskip
   \begin{center}
@@ -531,10 +589,6 @@
     Never- or not-yet-treated comparison; doubly robust &
     Last-cohort or never-treated comparison &
     Comparison across switchers and non-switchers \\
-    \midrule
-    \texttt{csdid} (Stata) &
-    \texttt{eventstudyinteract} (Stata) &
-    \texttt{did\_multiplegt\_dyn} (Stata) \\
     \bottomrule
   \end{tabular}
   \end{center}
@@ -542,31 +596,53 @@
 \end{frame}
 
 % -------------------------------------------------------
-\begin{frame}{Callaway \& Sant'Anna (2021): group-time ATTs}
+\begin{frame}{Callaway \& Sant'Anna (2021): identification and IPW estimator}
 
-  \textbf{Key idea:} Instead of one aggregate $\delta$, estimate a matrix of \emph{group-time ATTs}:
+  \textbf{Target:} $ATT(g,t) = E[Y_t^1 - Y_t^0 \mid G_g=1]$, where $G_g=1$ = units first treated at $g$.\\[2pt]
+  \textbf{Assumptions:} absorbing treatment $\cdot$ conditional parallel trends (given $X$) $\cdot$ no anticipation $\cdot$ common support
+
+  \medskip
+  \textbf{IPW estimator} — reweight clean controls to resemble cohort $g$:
   \[
-    ATT(g,t) = E\bigl[Y_t^1 - Y_t^0 \mid G_g = 1\bigr]
+    \widehat{ATT}(g,t) \;=\;
+      \underbrace{E\!\left[\tfrac{G_g}{E[G_g]}\,(Y_t - Y_{g-1})\right]}_{\text{(A) cohort }g\text{ mean change}}
+    \;-\;
+      \underbrace{E\!\left[\tfrac{w_g(X)}{E[w_g(X)]}\,(Y_t - Y_{g-1})\right]}_{\text{(B) reweighted controls mean change}}
   \]
-  where $G_g = 1$ identifies units first treated at time $g$.
+
+  \smallskip
+  \[
+    w_g(X) \;=\; \frac{\hat{p}_g(X)\,(1-D_t)(1-G_g)}{1-\hat{p}_g(X)}, \qquad
+    \hat{p}_g(X) = \widehat{P}(G_g=1\mid X)
+  \]
+
+  \smallskip
+  {\footnotesize
+  \begin{itemize}
+    \item \textbf{$(1-D_t)(1-G_g)$}: selects \emph{clean} controls only — untreated at $t$, not in cohort $g$
+    \item \textbf{$\hat{p}_g/(1-\hat{p}_g)$}: odds-ratio weight — upweights controls whose $X$ profile matches cohort $g$
+    \item \textbf{Dividing by $E[w_g]$}: normalises weights to sum to 1, so (B) is a proper average
+  \end{itemize}}
+
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Callaway \& Sant'Anna (2021): aggregation choices}
+
+  All aggregations are weighted averages of $ATT(g,t)$ $\rightarrow$ different choices weight cohort $\times$ period cells differently.
 
   \medskip
-  \textbf{Assumptions:}
-  \begin{enumerate}
-    \item Irreversible treatment (absorbing state)
-    \item Conditional parallel trends (given $X$) relative to either never-treated \emph{or} not-yet-treated
-    \item No anticipation
-    \item Common support for the propensity score
-  \end{enumerate}
-
-  \medskip
-  \textbf{Aggregation choices} — all are averages of ATT(g,t) with different weights:
   \begin{itemize}
     \item \textbf{Simple} (uniform): one overall ATT
-    \item \textbf{Event-time}: ATT at each period relative to treatment ($\ell = t - g$) — the event-study plot
-    \item \textbf{Calendar}: ATT by calendar year
-    \item \textbf{Group}: ATT by cohort
+    \item \textbf{Event-time}: ATT at each relative period $\ell = t-g$ $\rightarrow$ the event-study plot
+    \item \textbf{Calendar}: ATT by calendar year $t$
+    \item \textbf{Group}: ATT by cohort $g$ $\rightarrow$ reveals heterogeneity across adoption waves
   \end{itemize}
+
+  \medskip
+  \begin{alertblock}{Contrast with TWFE}
+    TWFE implicitly weights all $ATT(g,t)$ cells, often with negative weights for early adopters. CS lets you choose weights \emph{explicitly} and test whether effects vary across groups.
+  \end{alertblock}
 
 \end{frame}
 
@@ -591,7 +667,7 @@
   \begin{exampleblock}{Comparison with CS}
     SA and CS produce numerically very similar event-study plots when using the same comparison group.
     SA is more natural when you want the TWFE regression as the starting point;
-    CS is more flexible (doubly robust, can use not-yet-treated).
+    CS is more flexible (doubly robust, can use not-yet-treated, forces time invariant controls).
   \end{exampleblock}
 
 \end{frame}
@@ -646,7 +722,7 @@
   \begin{alertblock}{The few-clusters problem}
     Standard cluster-robust SEs require many clusters (rule of thumb: $\geq 30$--50).
     With few treated clusters, SEs are downward biased and rejection rates inflated.\\[4pt]
-    \textbf{Solutions:} wild cluster bootstrap (\texttt{boottest}); randomisation inference;
+    \textbf{Solutions:} wild cluster bootstrap; randomisation inference;
     or report both cluster-robust and wild-bootstrap CIs.
   \end{alertblock}
 
@@ -674,7 +750,7 @@
 
     \item \textbf{Low power.}
           Pre-trend tests are typically underpowered. We can fail to detect economically meaningful
-          pre-trends. Roth (2022): in papers from \textit{AER}, \textit{AEJ Applied}, \textit{AEJ Policy},
+          pre-trends (fail to detect type II error, false negative). Roth (2022): in papers from \textit{AER}, \textit{AEJ Applied}, \textit{AEJ Policy},
           the pre-trend test had only 50--80\% power against violations that would substantially bias the estimate.
 
     \item \textbf{Pre-testing distortions.}
@@ -707,107 +783,230 @@
     \item \textbf{Relative magnitudes ($\bar M$):} $|\delta_{post}| \leq \bar M\,|\delta_{pre}|$
   \end{itemize}
 
-  For each value of $M$, compute a \emph{robust confidence interval}.
-  Report how the CI changes as $M$ grows — the \textbf{sensitivity plot}.
 
 \end{frame}
 
 % -------------------------------------------------------
-\begin{frame}[shrink=8]{How to read a HonestDiD sensitivity plot}
+\begin{frame}{Smoothness restriction: the geometry}
 
   \begin{columns}[T]
+
+    \begin{column}{0.52\textwidth}
+      \includegraphics[width=\linewidth]{../Figures/L2_rambachan_and_roth.png}
+    \end{column}
+
+    \begin{column}{0.44\textwidth}
+      \begin{itemize}
+        \item \textbf{Black dot + line:} observed pre-trend $\delta_{-1}$,
+              running from $t=-1$ to $t=0$
+        \item \textbf{Dashed centre line:} pure linear extrapolation into
+              the post period — if the trend were exactly linear it would
+              reach $-\delta_{-1}$ at $t=1$
+        \item \textbf{Blue cone:} all admissible post-trends under the
+              smoothness restriction
+              \[ \delta_1 \in [-\delta_{-1}-M,\;-\delta_{-1}+M] \]
+      \end{itemize}
+    \end{column}
+
+  \end{columns}
+
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{HonestDiD in practice: sensitivity plot}
+
+  \begin{columns}[T]
+
+    \begin{column}{0.44\textwidth}
+      \includegraphics[width=\linewidth]{../Figures/L2_rambachan_and_roth2.png}
+    \end{column}
+
+    \begin{column}{0.52\textwidth}
+      \textbf{outcome: male employment, p.p.}
+      \begin{itemize}
+        \item \textbf{X-axis:} $M$ — the maximum allowed deviation from a
+              linear pre-trend extrapolation
+        \item \textbf{Blue bar ($M\approx 0$):} standard CI under exact
+              parallel trends — narrow, entirely below zero; effect is
+              \alert{negative and significant}
+        \item \textbf{Red bars ($M>0$):} robust CIs widen as $M$ grows
+              and \alert{cross zero already at $M\approx 0.01$}
+      \end{itemize}
+
+    \end{column}
+
+  \end{columns}
+
+\end{frame}
+
+
+% --- Roth pre-trend sensitivity figure (robots paper) ---
+
+% --- Paper intro slide 1b: Robots ---
+\begin{frame}{Paper — Robot adoption and product innovation}
+
+  \begin{block}{The question}
+    Does adopting industrial robots enable \textbf{product innovation},
+    or does it crowd it out through diseconomies of scope?
+  \end{block}
+
+  \medskip
+  \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \textbf{Axes:}
+      \textbf{Data}
       \begin{itemize}
-        \item $x$-axis: $M$ — the amount of allowed trend deviation
-        \item $y$-axis: the robust 95\% confidence interval for the ATT
+        \item Spanish firm-level panel (ESEE survey)
+        \item Staggered adoption timing: treated firms adopt robots at
+              different points in time
+        \item Outcomes: probability and count of new product introductions
       \end{itemize}
-
-      \bigskip
-      \textbf{Reading the plot:}
-      \begin{itemize}
-        \item At $M=0$: standard CI (assumes exact parallel trends)
-        \item As $M$ grows: CI widens — we allow more deviation
-        \item Find the \emph{breakdown $M$}: the value at which the CI crosses zero
-        \item Ask: is that level of trend deviation \emph{plausible} given the pre-trend?
-      \end{itemize}
-
-      \bigskip
-      \begin{exampleblock}{Practical benchmark}
-        A common choice: $M$ equal to the largest estimated pre-trend coefficient.
-        This asks: ``What if the post-period trend deviates as much as the worst pre-period trend?''
-      \end{exampleblock}
     \end{column}
     \begin{column}{0.48\textwidth}
-      % TikZ schematic sensitivity plot
-      \begin{tikzpicture}[scale=0.85]
-        \draw[->] (-0.2,0) -- (4.0,0) node[right]{\small $M$};
-        \draw[->] (0,-1.8) -- (0,2.5) node[above]{\small CI};
-        % zero line
-        \draw[dashed, gray!60] (-0.1,0) -- (4.0,0);
-        % upper bound (widening)
-        \draw[thick, ecblue] (0,0.8) to[out=5, in=175] (3.8,2.2)
-              node[right]{\tiny upper};
-        % lower bound (crossing zero)
-        \draw[thick, ecblue] (0,0.2) to[out=-5, in=170] (3.8,-1.5)
-              node[right]{\tiny lower};
-        % breakdown point
-        \draw[dashed, ecred] (2.2,-1.8) -- (2.2,0.5)
-              node[above]{\tiny \color{ecred} breakdown $M$};
-        \fill[ecred] (2.2,0) circle (2.5pt);
-        % shaded region for positive CI
-        \fill[ecblue!15] (0,0.2) -- (0,0.8)
-              to[out=5, in=175] (2.2,1.5)
-              -- (2.2,0) to[out=170, in=-5] (0,0.2);
-        \node at (1.0, 0.5) {\tiny \color{ecblue} positive};
-      \end{tikzpicture}
+      \textbf{Key findings}
+      \begin{itemize}
+        \item \emph{Negative} effect of robot adoption on product innovation
+        \item Larger for established, large, non-high-tech firms
+        \item Mechanism: \emph{diseconomies of scope} ---
+              robots divert resources toward capacity expansion
+        \item Staggered DiD + IV robustness check
+      \end{itemize}
     \end{column}
   \end{columns}
 
+  \medskip
+  \small\textit{\citet{antonioli2024robot} --- Antonioli, Marzucchi,
+    Rentocchini \& Vannuccini, \textit{Research Policy} 53 (2024)}
+
+\end{frame}
+
+\begin{frame}{Robots paper: pre-trend sensitivity (Roth test)}
+
+  \begin{columns}[T]
+    \begin{column}{0.56\textwidth}
+      \includegraphics[width=\linewidth]{../Figures/L2_roth_likelihood_ratio.png}
+    \end{column}
+    \begin{column}{0.40\textwidth}\small
+      \textbf{Reading the plot}
+      \begin{itemize}
+        \item \textbf{Y-axis:} LR = $\mathcal{L}(\hat\beta_{\text{pre}} \mid \text{violation})
+          / \mathcal{L}(\hat\beta_{\text{pre}} \mid \text{PT})$\\
+          High $\Rightarrow$ data consistent with a violation
+        \item \textbf{X-axis:} power to detect that violation
+      \end{itemize}
+
+      \smallskip
+      \textbf{Takeaways}
+      \begin{itemize}
+        \item Non-linear: LR $\approx 0$ $\rightarrow$ ruled out
+        \item Linear: LR $\approx 0.12$ at low power, $\to 0$ above power $0.5$
+        \item Panel (b) drops faster: count outcome safer than probability
+      \end{itemize}
+
+    \end{column}
+  \end{columns}
+      \smallskip
+      \begin{alertblock}{Verdict}
+        Only small linear violations survive; parallel trends credible.
+      \end{alertblock}
 \end{frame}
 
 % ============================================================
 \section{Lab Preview}
 % ============================================================
 
+% --- Paper intro slide 1: DoE ---
+\begin{frame}{Paper 1 — Academic excellence and faculty recruitment}
+
+  \begin{block}{The question}
+    Did Italy's \textbf{Departments of Excellence} (DoE) initiative --- a
+    competitive excellence grant awarded in 2018 --- raise faculty recruitment
+    in winning departments?
+  \end{block}
+
+  \medskip
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Data}
+      \begin{itemize}
+        \item 290 university departments, balanced panel 2013--2020
+        \item Single treatment cohort: award year 2018
+        \item Outcome: new hires (permanent academic staff)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Key findings}
+      \begin{itemize}
+        \item Positive average hiring effect
+        \item Driven by \emph{second-tier} departments, not top ones
+        \item More external (inter-institutional) recruitment
+        \item Equalising, not concentrating, effect
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \medskip
+  \small\textit{\citet{rizzo2025doe} — Oxford Economic Papers, 2026}
+
+\end{frame}
+
+
+
+% --- Paper intro slide 2: M&A ---
+\begin{frame}{Paper 2 — M\&As, innovation and superstar firms}
+
+  \begin{block}{The question}
+    Do technology M\&As contribute to the rise of \textbf{superstar firms} by
+    raising market power, or are they mainly about synergies and innovation?
+  \end{block}
+
+  \medskip
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Data}
+      \begin{itemize}
+        \item 7{,}978 publicly listed firms, 2008--2020
+        \item M\&A deals: Zephyr (Bureau van Dijk)
+        \item Innovation: ORBIS IP patent database
+        \item Outcome: firm-level markup (revenue/variable cost)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Key findings}
+      \begin{itemize}
+        \item $+2\%$ average markup increase post-deal
+        \item Mechanism: \emph{patent insulation}, not synergies
+        \item Larger effects for top R\&D investors, US firms,
+              high-tech, and AI/GPT deals
+        \item Staggered DiD: Callaway--Sant'Anna \& Sun--Abraham
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \medskip
+  \small\textit{\citet{rentocchini2025superstar} --- Martinez Cillero,
+    Napolitano, Rentocchini, Seri \& Zaurino (working paper)}
+
+\end{frame}
+
 \begin{frame}[shrink=5]{Lab 2: two applied examples}
 
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
       \begin{block}{Exercise 1 — Departments of Excellence}
-        \textbf{Question:} Did the Italian Academic Excellence Initiative
-        (2018--) raise faculty recruitment in awarded departments?
-
-        \medskip
-        \textbf{Data:} 290 university departments, balanced panel 2013--2020.
-        Single treatment cohort (2018). Source: \citet{rizzo2025doe}.
-
-        \medskip
         \textbf{Methods:}
         \begin{itemize}\small
-          \item Descriptives + raw trends
           \item TWFE static \& event study
           \item Conditional parallel trends test
-          \item Callaway \& Sant'Anna (\texttt{csdid})
-          \item HonestDiD sensitivity plot
         \end{itemize}
       \end{block}
     \end{column}
     \begin{column}{0.48\textwidth}
       \begin{block}{Exercise 2 — Superstar M\&A}
-        \textbf{Question:} Do technology-related M\&As raise acquirer markups?
-
-        \medskip
-        \textbf{Data:} Firm-level panel, staggered by M\&A year.
-        Source: \citet{rentocchini2025superstar}.
-
-        \medskip
         \textbf{Methods:}
         \begin{itemize}\small
-          \item TWFE static \& event study
-          \item Bacon decomposition (\texttt{bacondecomp})
+          \item TWFE staggered
           \item CS \& SA combined event-study plot
-          \item HonestDiD sensitivity plot
+          \item Frenchies estimator (dCdH)
         \end{itemize}
       \end{block}
     \end{column}
@@ -815,8 +1014,9 @@
 
   \bigskip
   \begin{center}
-    \textbf{Script:} \texttt{Lab/L2\_did.do}
+    \textbf{Script:} \texttt{Lab/L2\_did.do} 
   \end{center}
+
 
 \end{frame}
 
