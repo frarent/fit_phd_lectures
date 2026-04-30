@@ -20,4 +20,8 @@ Lab/stata_all_in_one_temp.do
 *log.txt
 temp/
 notes/
+Slides/
+Lab/L3/scripts/stata_all_in_one_temp.do
+logs
+Lab/old
 
