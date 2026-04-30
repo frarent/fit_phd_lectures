@@ -1,0 +1,559 @@
+* 00000012
+*! version 1.0.0
+* Do not erase or edit this file
+* It is used by Stata to track the ado and help
+* files you have installed.
+
+S http://fmwww.bc.edu/repec/bocode/s
+N synth.pkg
+D 30 Apr 2026
+U 1
+d 'SYNTH': module to implement Synthetic Control Methods for Comparative Case Studies
+d 
+d  synth implements the synthetic control method for causal
+d inference in comparative case studies as described in "Synthetic
+d Control Methods for Comparative Case Studies of Aggregate
+d Interventions:  Estimating the Effect of California's Tobacco
+d Control Programm.  Journal of the American Statistical
+d Association. 105(490): 493-505. 2010.
+d 
+d KW: synthetic control
+d KW: causal inference
+d KW: comparative case studies
+d 
+d Requires: Stata version 13
+d 
+d Distribution-Date: 20260430
+d 
+d Author: Alberto Abadie, MIT
+d Support: email abadie@mit.edu
+d 
+d Author: Alexis Diamond, IFC
+d Support: email  adiamond@fas.harvard.edu
+d 
+d Author: Jens Hainmueller, Stanford University
+d Support: email jhain@@stanford.edu
+d 
+f s\synth.ado
+f s\synth_ll.ado
+f s\synth.sthlp
+f l\lsynth_mata_subr.mlib
+f s\synthopt.plugin
+e
+S http://fmwww.bc.edu/repec/bocode/r
+N rdrobust.pkg
+D 30 Apr 2026
+U 2
+d 'RDROBUST': module to provide robust data-driven inference in the regression-discontinuity design
+d 
+d   rdrobust implements local polynomial Regression Discontinuity
+d (RD) point estimators with     robust bias-corrected
+d confidence intervals and inference procedures developed in
+d Calonico,    Cattaneo and Titiunik (Econometrica, 2014),
+d Calonico, Cattaneo and Farrell (Stata Journal, 2017), and
+d Calonico,    Cattaneo, Farrell and Titiunik (JASA, 2018).  It
+d also computes alternative estimation and   inference
+d procedures available in the literature.  Companion commands
+d are: rdbwselect for data-driven bandwidth selection, and rdplot
+d for      data-driven RD plots (see Calonico, Cattaneo and
+d Titiunik (JASA, 2015) for details).
+d 
+d KW: regression discontinuity
+d KW: robust inference
+d 
+d Requires: Stata version 13.1
+d 
+d Distribution-Date: 20220930
+d 
+d Author: Sebastian Calonico, Department of Economics, University of Miami
+d Support: email scalonico@@bus.miami.edu
+d 
+d Author: Matias D. Cattaneo, Department of Operations Research and Financial Engineering, Princeton University
+d Support: email cattaneo@@princeton.edu
+d 
+d Author:  Max H. Farrell, Booth School of Business, University of Chicago
+d Support: email max.farrell@@chicagobooth.edu
+d 
+d Author: Rocio Titiunik, Department of Political Science, University of Michigan
+d Support: email  titiunik@@umich.edu
+d 
+f r\rdrobust.ado
+f r\rdrobust.sthlp
+f r\rdbwselect.ado
+f r\rdbwselect.sthlp
+f r\rdplot.ado
+f r\rdplot.sthlp
+f r\rdbwselect_2014.ado
+f r\rdbwselect_2014.sthlp
+f r\rdbwselect_2014_kconst.ado
+f r\rdrobust_bw.mo
+f r\rdrobust_collapse.mo
+f r\rdrobust_groupid.mo
+f r\rdrobust_kweight.mo
+f r\rdrobust_median.mo
+f r\rdrobust_res.mo
+f r\rdrobust_vce.mo
+e
+S http://fmwww.bc.edu/repec/bocode/r
+N rddensity.pkg
+D 30 Apr 2026
+U 3
+d 'RDDENSITY': module to perform  Manipulation Testing Using Local Polynomial Density Estimation
+d 
+d   rddensity implements manipulation testing procedures using the
+d local polynomial density estimators proposed       in Cattaneo,
+d Jansson and Ma (2020), and implements graphical procedures with
+d valid confidence bands using       the results in Cattaneo,
+d Jansson and Ma (2021).  In addition, the command provides
+d complementary        manipulation testing based on finite sample
+d exact binomial testing following the results in Cattaneo,
+d Frandsen and Titiunik (2015) and Cattaneo, Frandsen and
+d Vazquez-Bare (2017). For an introduction to       manipulation
+d testing see McCrary (2008).
+d 
+d KW: manipulation
+d KW: local polynomial density
+d 
+d Requires: Stata version 14 and lpdensity from SSC (q.v.)
+d 
+d Distribution-Date: 20220708
+d 
+d Author: Matias D. Cattaneo, Department of Operations Research and Financial Engineering, Princeton University
+d Support: email cattaneo@@princeton.edu
+d 
+d Author: Michael Jansson, Department of Economics, UC-Berkeley
+d Support: email mjansson@@econ.berkeley.edu
+d 
+d Author:  Xinwei Ma, Department of Economics, UCSD
+d Support: email x1ma@@ucsd.edu
+d 
+f r\rdbwdensity.ado
+f r\rdbwdensity.sthlp
+f r\rddensity.ado
+f r\rddensity.sthlp
+f r\rddensity_fv.mo
+f r\rddensity_h.mo
+f r\rddensity_quantile.mo
+f r\rddensity_rep.mo
+f r\rddensity_unique.mo
+e
+S http://fmwww.bc.edu/repec/bocode/i
+N ivreg2.pkg
+D 30 Apr 2026
+U 4
+d 'IVREG2': module for extended instrumental variables/2SLS and GMM estimation
+d 
+d  ivreg2 provides extensions to Stata's official ivregress and
+d newey. Its main capabilities: two-step feasible GMM estimation;
+d continuously updated GMM estimation (CUE); LIML and k-class
+d estimation; automatic output of the Hansen-Sargan or
+d Anderson-Rubin statistic for overidentifying restrictions; C
+d statistic test of exogeneity of subsets of instruments (orthog()
+d option); kernel-based autocorrelation-consistent (AC) and
+d heteroskedastic and autocorrelation-consistent (HAC) estimation,
+d with user-specified choice of kernel; Cragg's "heteroskedastic
+d OLS" (HOLS) estimator; default reporting of large-sample
+d statistics (z and chi-squared rather than t and F); small option
+d to report small-sample statistics; first-stage regression
+d reported with F-test of excluded instruments and R-squared with
+d included instruments "partialled-out"; enhanced Kleibergen-Paap
+d and Cragg-Donald tests for weak instruments, redundancy of
+d instruments, significance of endogenous regressors; two-way
+d clustering of standard errors;  Kiefer and Driscoll-Kraay
+d standard errors. ivreg2 can also be used for ordinary least
+d squares (OLS) estimation using the same command syntax as Stata's
+d official regress and newey. New in this version: ivreg2 now
+d supports factor variables. This is version 4.1.11 of ivreg2,
+d updated from that published in Stata Journal, 5(4), requiring
+d Stata 11.2 or better. Stata 8.2/9.2/10.2 users may use this
+d routine, which will  automatically call ivreg28, ivreg29, or
+d ivreg210, respectively. These versions are now included in the
+d ivreg2 package. Stata 7 users may use the Stata Journal version
+d of ivreg2, accessible via net search ivreg2.
+d 
+d KW: instrumental variables
+d KW: Sargan test
+d KW: robust estimation
+d KW: orthogonality
+d KW: GMM
+d KW: Hansen's J
+d KW: heteroskedastic OLS
+d 
+d Requires: Stata version 11.2 and ranktest from SSC
+d 
+d Distribution-Date: 20240814
+d 
+d Author: Christopher F Baum, Boston College
+d Support: email baum@@bc.edu
+d 
+d Author: Mark E Schaffer, Heriot-Watt University
+d Support: email m.e.schaffer@@hw.ac.uk
+d 
+d Author: Steven Stillman, Free University of Bozen-Bolzano
+d Support: email  Steven.Stillman@@unibz.it
+d 
+f i\ivreg2.ado
+f i\ivreg2.sthlp
+f i\ivreg2_p.ado
+f l\livreg2.mlib
+f i\ivreg210.ado
+f i\ivreg210.sthlp
+f i\ivreg210_p.ado
+f i\ivreg29.ado
+f i\ivreg29.hlp
+f i\ivreg29_p.ado
+f i\ivreg29_cue.ado
+f i\ivreg28.ado
+f i\ivreg28.hlp
+f i\ivreg28_p.ado
+f i\ivreg28_cue.ado
+e
+S http://fmwww.bc.edu/repec/bocode/r
+N ranktest.pkg
+D 30 Apr 2026
+U 5
+d 'RANKTEST': module to test the rank of a matrix
+d 
+d  ranktest implements various tests for the rank of a matrix.
+d Tests of the rank of a matrix have many practical applications.
+d For example, in econometrics the requirement for identification
+d is the rank condition, which states that a particular matrix must
+d be of full column rank. Another example from econometrics
+d concerns cointegration in vector autoregressive (VAR) models; the
+d Johansen trace test is a test of a rank of a particular matrix.
+d The traditional test of the rank of a matrix for the standard
+d (stationary) case is the Anderson (1951) canonical correlations
+d test. If we denote one list of variables as Y and a second as Z,
+d and we calculate the squared canonical correlations between Y and
+d Z, the LM form of the Anderson test, where the null hypothesis is
+d that the matrix of correlations or regression parameters B
+d between Y and Z has rank(B)=r, is N times the sum of the r+1
+d largest squared canonical correlations. A large test statistic
+d and rejection of the null indicates that the matrix has rank at
+d least r+1. The Cragg-Donald (1993) statistic is a closely related
+d Wald test for the rank of a matrix. The standard versions of
+d these tests require the assumption that the covariance matrix has
+d a Kronecker form; when this is not so, e.g., when disturbances
+d are heteroskedastic or autocorrelated, the test statistics are no
+d longer valid. ranktest implements various generalizations of
+d these tests - Kleibergen-Paap, Cragg-Donald, and J-type 2-step
+d GMM and CUE GMM tests - to the case of a non-Kronecker covariance
+d matrix. The implementation in ranktest will calculate test
+d statistics that are robust to various forms of
+d heteroskedasticity, autocorrelation, and clustering.
+d 
+d KW: matrix
+d KW: rank
+d KW: collinearity
+d KW: cointegration
+d 
+d Requires: Stata version 12 (version 9.2 for ranktest9, version 11 for ranktest11)
+d 
+d Distribution-Date: 20200929
+d 
+d Author: Frank Kleibergen, Brown University
+d Support: email  Frank_Kleibergen@@brown.edu
+d 
+d Author: Mark E Schaffer, Heriot-Watt University
+d Support: email m.e.schaffer@@hw.ac.uk
+d 
+d Author: Frank Windmeijer, University of Oxford
+d Support: email frank.windmeijer@@stats.ox.ac.uk
+d 
+f r\ranktest.ado
+f r\ranktest9.ado
+f r\ranktest11.ado
+f r\ranktest.sthlp
+f r\ranktest11.sthlp
+f l\livreg2.mlib
+e
+S http://fmwww.bc.edu/repec/bocode/e
+N estout.pkg
+D 30 Apr 2026
+U 6
+d 'ESTOUT': module to make regression tables
+d 
+d  estout produces a table of regression results from one or
+d several models for use with spreadsheets, LaTeX, HTML, or a
+d word-processor table. eststo stores a quick copy of the active
+d estimation results for later tabulation. esttab is a wrapper for
+d estout. It displays a pretty looking publication-style regression
+d table without much typing. estadd adds additional results to the
+d e()-returns for one or several models previously fitted and
+d stored. This package subsumes the previously circulated esto,
+d esta, estadd,  and estadd_plus. An earlier version of estout is
+d available  as estout1.
+d 
+d KW: estimates
+d KW: LaTeX
+d KW: HTML
+d KW: word processor
+d KW: output
+d 
+d Requires: Stata version 8.2
+d 
+d Distribution-Date: 20260413
+d 
+d Author: Ben Jann, University of Bern
+d Support: email jann@@soz.unibe.ch
+d 
+f _\_eststo.ado
+f _\_eststo.hlp
+f e\estadd.ado
+f e\estadd.hlp
+f e\estout.ado
+f e\estout.hlp
+f e\eststo.ado
+f e\eststo.hlp
+f e\estpost.ado
+f e\estpost.hlp
+f e\esttab.ado
+f e\esttab.hlp
+e
+S http://fmwww.bc.edu/repec/bocode/c
+N coefplot.pkg
+D 30 Apr 2026
+U 7
+d 'COEFPLOT': module to plot regression coefficients and other results
+d 
+d   coefplot plots results from estimation commands or Stata
+d matrices. Results from multiple models or matrices can be
+d combined in a single graph. The default behavior of coefplot is
+d to draw markers for coefficients and horizontal spikes for
+d confidence intervals. However, coefplot can also produce various
+d other types of graphs.
+d 
+d KW: graphics
+d KW: coefficients
+d KW: estimation
+d 
+d Requires: Stata version 11
+d 
+d Distribution-Date: 20250822
+d 
+d Author: Ben Jann, University of Bern
+d Support: email jann@@soz.unibe.ch
+d 
+f c\coefplot.ado
+f c\coefplot.sthlp
+e
+S http://fmwww.bc.edu/repec/bocode/s
+N ssaggregate.pkg
+D 30 Apr 2026
+U 8
+d 'SSAGGREGATE': module to create shock-level aggregates for shift-share IV
+d 
+d  Converts variables of a shift-share IV dataset into a dataset of
+d weighted shock-level aggregates, as described in Borusyak, Hull,
+d and Jaravel (2019), to implement quasi-experimental shift-share
+d (Bartik) designs via shock-level IV regressions.
+d 
+d KW: shift-share models
+d KW: IV
+d KW: shock-level aggregates
+d 
+d Requires: Stata version 11
+d 
+d Distribution-Date: 20200826
+d 
+d Author: Kirill Borusyak , Princeton University
+d Support: email borusyak@@princeton.edu
+d 
+d Author:  Peter Hull, University of Chicago
+d Support: email hull@@uchicago.edu
+d 
+d Author: Xavier Jaravel , LSE
+d Support: email x.jaravel@@lse.ac.uk
+d 
+f s\ssaggregate.ado
+f s\ssaggregate.sthlp
+e
+S http://fmwww.bc.edu/repec/bocode/b
+N blindschemes.pkg
+D 30 Apr 2026
+U 9
+d 'BLINDSCHEMES': module to provide graph schemes sensitive to color vision deficiency
+d 
+d  While Stata's computational capabilities have intensively
+d increased over the last decade, the quality of its default figure
+d schemes is still a matter of debate amongst users. Clearly some
+d of the arguments speaking against Stata figures are subject to
+d individual taste, but others are not, such as for instance:
+d horizontal labelling, unnecessary background tinting, missing
+d gridlines, oversized markers. The two schemes introduced here
+d attempt to solve the major shortcomings of Stata's default figure
+d schemes.  The schemes come with 21 new colors, of which seven
+d colors are distinguishable for people suffering from color
+d blindness.  This package provides users with four new figure
+d schemes: plotplain (plain and simple plotting environment, avoids
+d chartjunk); plotplainblind (plain and simple plotting
+d environment, avoids chartjunk + colorblind friendly); plottig
+d (replicates R ggplot in most regards); plottigblind (replicates R
+d ggplot in most regards + colorblind friendly)
+d 
+d KW: graphics
+d KW: schemes
+d KW: color vision deficiency
+d KW: color blindness
+d KW: chartjunk
+d 
+d Requires: Stata version 12
+d 
+d Distribution-Date: 20200807
+d 
+d Author: Daniel Bischof, University of Zurich
+d Support: email bischof@@ipz.uzh.ch
+d 
+f b\blindschemes.sthlp
+f s\scheme-plotplain.scheme
+f s\scheme-plotplainblind.scheme
+f s\scheme-plottig.scheme
+f s\scheme-plottigblind.scheme
+f p\plotplain.sthlp
+f p\plotplainblind.sthlp
+f p\plottig.sthlp
+f p\plottigblind.sthlp
+f style\color-vermillion.style
+f style\color-sky.style
+f style\color-reddish.style
+f style\color-orangebrown.style
+f style\color-ananas.style
+f style\color-turquoise.style
+f style\color-sea.style
+f style\color-plb1.style
+f style\color-plb2.style
+f style\color-plb3.style
+f style\color-plg1.style
+f style\color-plg2.style
+f style\color-plg3.style
+f style\color-pll1.style
+f style\color-pll2.style
+f style\color-pll3.style
+f style\color-plr1.style
+f style\color-plr2.style
+f style\color-ply1.style
+f style\color-ply2.style
+f style\color-ply3.style
+e
+S http://fmwww.bc.edu/repec/bocode/l
+N lpdensity.pkg
+D 30 Apr 2026
+U 10
+d 'LPDENSITY': module to perform Local Polynomial Density Estimation and Inference
+d 
+d   lpdensity implements the local polynomial regression based
+d density (and derivatives) estimator proposed in  Cattaneo,
+d Jansson and Ma (2020).  Robust bias-corrected inference, both
+d pointwise (confidence intervals)   and uniform (confidence
+d bands) are also implemented following the results in Cattaneo,
+d Jansson and Ma (2020) and Cattaneo, Jansson and Ma
+d (2022a).  See Cattaneo, Jansson and Ma (2022b) for more
+d implementation details and illustrations.
+d 
+d KW: local polynomial
+d KW: density
+d KW: bias-corrected inference
+d 
+d Requires: Stata version 14
+d 
+d Distribution-Date: 20220708
+d 
+d Author: Matias D. Cattaneo, Department of Operations Research and Financial Engineering, Princeton University
+d Support: email cattaneo@@princeton.edu
+d 
+d Author: Michael Jansson, Department of Economics, UC-Berkeley
+d Support: email mjansson@@econ.berkeley.edu
+d 
+d Author:  Xinwei Ma, Department of Economics, UCSD
+d Support: email x1ma@@ucsd.edu
+d 
+f l\lpbwdensity.ado
+f l\lpbwdensity.sthlp
+f l\lpdensity.ado
+f l\lpdensity.sthlp
+f l\lpdensity_bwimse.mo
+f l\lpdensity_bwirot.mo
+f l\lpdensity_bwmse.mo
+f l\lpdensity_bwrot.mo
+f l\lpdensity_cgen.mo
+f l\lpdensity_fn.mo
+f l\lpdensity_fn.mo
+f l\lpdensity_ggen.mo
+f l\lpdensity_normdgp.mo
+f l\lpdensity_optfunc.mo
+f l\lpdensity_quantile.mo
+f l\lpdensity_rep.mo
+f l\lpdensity_sgen.mo
+f l\lpdensity_tgen.mo
+f l\lpdensity_unique.mo
+f l\lpdensity_whichmin.mo
+e
+S http://fmwww.bc.edu/repec/bocode/s
+N synth.pkg
+D 30 Apr 2026
+U 11
+d 'SYNTH': module to implement Synthetic Control Methods for Comparative Case Studies
+d 
+d  synth implements the synthetic control method for causal
+d inference in comparative case studies as described in "Synthetic
+d Control Methods for Comparative Case Studies of Aggregate
+d Interventions:  Estimating the Effect of California's Tobacco
+d Control Programm.  Journal of the American Statistical
+d Association. 105(490): 493-505. 2010.
+d 
+d KW: synthetic control
+d KW: causal inference
+d KW: comparative case studies
+d 
+d Requires: Stata version 13
+d 
+d Distribution-Date: 20260430
+d 
+d Author: Alberto Abadie, MIT
+d Support: email abadie@mit.edu
+d 
+d Author: Alexis Diamond, Minerva University
+d Support: email  adiamond@fas.harvard.edu
+d 
+d Author: Jens Hainmueller, Stanford University
+d Support: email jhain@@stanford.edu
+d 
+f s\synth.ado
+f s\synth_ll.ado
+f s\synth.sthlp
+f l\lsynth_mata_subr.mlib
+f s\synthopt.plugin
+e
+S http://www.stata-journal.com/software/sj17-4
+N st0500.pkg
+D 30 Apr 2026
+U 12
+d SJ17-4 st0500. Automation for multiple synthetic...
+d Automation for multiple synthetic control
+d   estimations
+d by Sebastian Galiani, University of Maryland,
+d      College Park, MD
+d    Brian Quistorff, Microsoft AI and Research,
+d      Redmond, WA
+d Support:  galiani@econ.umd.edu,
+d           Brian.Quistorff@microsoft.com
+d After installation, type help {cmd:effect_graphs},
+d   {cmd:pval_graphs}, {cmd:single_treatment_graphs}, and
+d   {cmd:synth_runner}
+f c\calc_rmspe.ado
+f e\effect_graphs.ado
+f p\pval_graphs.ado
+f s\single_treatment_graphs.ado
+f _\_sr_add_keepfile_to_agg.ado
+f _\_sr_do_work_do.ado
+f _\_sr_do_work_tr.ado
+f _\_sr_gen_time_locals.ado
+f _\_sr_get_returns.ado
+f _\_sr_print_dots.ado
+f s\synth_runner.ado
+f s\synth_wrapper.ado
+f e\effect_graphs.sthlp
+f p\pval_graphs.sthlp
+f s\single_treatment_graphs.sthlp
+f s\synth_runner.sthlp
+e
