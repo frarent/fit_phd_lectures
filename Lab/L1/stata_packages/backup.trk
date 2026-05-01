@@ -1,0 +1,174 @@
+* 00000003
+*! version 1.0.0
+* Do not erase or edit this file
+* It is used by Stata to track the ado and help
+* files you have installed.
+
+S http://fmwww.bc.edu/repec/bocode/b
+N blindschemes.pkg
+D  1 May 2026
+U 1
+d 'BLINDSCHEMES': module to provide graph schemes sensitive to color vision deficiency
+d 
+d  While Stata's computational capabilities have intensively
+d increased over the last decade, the quality of its default figure
+d schemes is still a matter of debate amongst users. Clearly some
+d of the arguments speaking against Stata figures are subject to
+d individual taste, but others are not, such as for instance:
+d horizontal labelling, unnecessary background tinting, missing
+d gridlines, oversized markers. The two schemes introduced here
+d attempt to solve the major shortcomings of Stata's default figure
+d schemes.  The schemes come with 21 new colors, of which seven
+d colors are distinguishable for people suffering from color
+d blindness.  This package provides users with four new figure
+d schemes: plotplain (plain and simple plotting environment, avoids
+d chartjunk); plotplainblind (plain and simple plotting
+d environment, avoids chartjunk + colorblind friendly); plottig
+d (replicates R ggplot in most regards); plottigblind (replicates R
+d ggplot in most regards + colorblind friendly)
+d 
+d KW: graphics
+d KW: schemes
+d KW: color vision deficiency
+d KW: color blindness
+d KW: chartjunk
+d 
+d Requires: Stata version 12
+d 
+d Distribution-Date: 20200807
+d 
+d Author: Daniel Bischof, University of Zurich
+d Support: email bischof@@ipz.uzh.ch
+d 
+f b\blindschemes.sthlp
+f s\scheme-plotplain.scheme
+f s\scheme-plotplainblind.scheme
+f s\scheme-plottig.scheme
+f s\scheme-plottigblind.scheme
+f p\plotplain.sthlp
+f p\plotplainblind.sthlp
+f p\plottig.sthlp
+f p\plottigblind.sthlp
+f style\color-vermillion.style
+f style\color-sky.style
+f style\color-reddish.style
+f style\color-orangebrown.style
+f style\color-ananas.style
+f style\color-turquoise.style
+f style\color-sea.style
+f style\color-plb1.style
+f style\color-plb2.style
+f style\color-plb3.style
+f style\color-plg1.style
+f style\color-plg2.style
+f style\color-plg3.style
+f style\color-pll1.style
+f style\color-pll2.style
+f style\color-pll3.style
+f style\color-plr1.style
+f style\color-plr2.style
+f style\color-ply1.style
+f style\color-ply2.style
+f style\color-ply3.style
+e
+S http://fmwww.bc.edu/repec/bocode/c
+N cem.pkg
+D  1 May 2026
+U 2
+d 'CEM': module to perform Coarsened Exact Matching
+d 
+d  The cem package provides a Stata implementation of coarsened
+d exact matching, a new method for improving the estimation of
+d causal effects by reducing  imbalance in covariates between
+d treated and control groups.  Coarsened exact matching is faster,
+d is easier to use and understand,  requires fewer assumptions, is
+d more easily automated, and possesses more  attractive statistical
+d properties for many applications than do existing  matching
+d methods. In coarsened exact matching, users temporarily coarsen
+d their  data, exact match on these coarsened data, and then run
+d their analysis on  the uncoarsened, matched data. Coarsened exact
+d matching bounds the degree  of model dependence and causal effect
+d estimation error by ex ante user choice,  is monotonic imbalance
+d bounding (so that reducing the maximum imbalance on  one variable
+d has no effect on others), does not require a separate procedure
+d to restrict data to common support, meets the congruence
+d principle,  is approximately invariant to measurement error,
+d balances all nonlinearities and  interactions in sample (i.e.,
+d not merely in expectation), and works with  multiply imputed
+d datasets. Other matching methods inherit many of the coarsened
+d exact matching method's properties when applied to further match
+d data preprocessed by coarsened exact matching.
+d 
+d KW: imbalance
+d KW: matching
+d KW: coarsened exact matching
+d KW: inference
+d 
+d Requires: Stata version 10.1
+d 
+d Distribution-Date: 20200215
+d 
+d Author:  Matthew Blackwell, Harvard University
+d Support: email mblackwell@@gov.harvard.edu
+d 
+d Author: Stefano Iacus, University of Milan
+d Support: email
+d 
+d Author: Gary King, Harvard University
+d Support: email
+d 
+d Author: Giuseppe Porro, University of Trieste
+d Support: email
+d 
+f c\cem.ado
+f c\cem.sthlp
+f i\imb.ado
+f i\imb.sthlp
+f l\listwise.ado
+f l\listwise.sthlp
+f l\lcem.mlib
+f c\cem-mata.do
+e
+S http://fmwww.bc.edu/repec/bocode/e
+N estout.pkg
+D  1 May 2026
+U 3
+d 'ESTOUT': module to make regression tables
+d 
+d  estout produces a table of regression results from one or
+d several models for use with spreadsheets, LaTeX, HTML, or a
+d word-processor table. eststo stores a quick copy of the active
+d estimation results for later tabulation. esttab is a wrapper for
+d estout. It displays a pretty looking publication-style regression
+d table without much typing. estadd adds additional results to the
+d e()-returns for one or several models previously fitted and
+d stored. This package subsumes the previously circulated esto,
+d esta, estadd,  and estadd_plus. An earlier version of estout is
+d available  as estout1.
+d 
+d KW: estimates
+d KW: LaTeX
+d KW: HTML
+d KW: word processor
+d KW: output
+d 
+d Requires: Stata version 8.2
+d 
+d Distribution-Date: 20260413
+d 
+d Author: Ben Jann, University of Bern
+d Support: email jann@@soz.unibe.ch
+d 
+f _\_eststo.ado
+f _\_eststo.hlp
+f e\estadd.ado
+f e\estadd.hlp
+f e\estout.ado
+f e\estout.hlp
+f e\eststo.ado
+f e\eststo.hlp
+f e\estpost.ado
+f e\estpost.hlp
+f e\esttab.ado
+f e\esttab.hlp
+e

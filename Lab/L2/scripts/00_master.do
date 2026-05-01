@@ -1,9 +1,15 @@
-*=============================================================================*
-* Project title: Walking the Green Line: Government Sponsored R&D
-*                and Clean Technologies in the US
-* Created by: Francesco Rentocchini and Gianluca Orsatti
-* Date: 16/04/2026
-*=============================================================================*
+* ============================================================================
+* Lab 2 Master Script: Difference-in-Differences — The Good, the Bad and the Ugly
+* PhD programme: Economics, Management and Methods for the
+*                Sustainable Transition — University of Ferrara, 5–6 May 2026
+* Author: Francesco Rentocchini
+* ----------------------------------------------------------------------------
+* Exercises:
+*   01 — Rizzo et al. (2025): DiD event study + CS estimator
+*        (Departments of Excellence)
+*   02 — Sun & Abraham estimator by hand
+*   03 — HonestDiD sensitivity bounds
+* ============================================================================
 
 // Clear Memory
 *=============================================================================*
@@ -47,9 +53,12 @@ net set ado "stata_packages"
 *=============================================================================*
 
 // Install required packages
-global install_packages  0
+global install_packages  1
 
-global housekeep 0
+global housekeep         1
+global run_01_did        1
+global run_02_sa         1
+global run_03_honestdid  1
 
 // Initialize log and record system parameters
 *=============================================================================*
@@ -90,6 +99,11 @@ matrix drop _all
 if $install_packages == 1 {
 	include "${script_path}/00a_packages_install.do"
 }
+
+// Analysis scripts
+if $run_01_did       == 1  include "${script_path}/01_L2_did_clean.do"
+if $run_02_sa        == 1  include "${script_path}/02_L2_SA_by_hand.do"
+if $run_03_honestdid == 1  include "${script_path}/03_HonestDID.do"
 
 
 // Housekeeping (clear temp folder)

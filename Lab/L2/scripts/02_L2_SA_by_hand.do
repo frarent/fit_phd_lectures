@@ -1,9 +1,3 @@
-ssc install eventstudyinteract
-ssc install avar
-ssc install reghdfe
-ssc install ftools
-ssc install require
-
 * Load the dataset
 webuse nlswork, clear
  

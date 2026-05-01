@@ -40,6 +40,17 @@ Each lab folder follows the same layout: `scripts/`, `data/`, `Figures/`, `logs/
 
 ## Getting started
 
+**1. Download the repository**
+
+No Git required. On the [GitHub page](https://github.com/frarent/fit_phd_lectures), click the green **Code** button → **Download ZIP**. Extract the ZIP to a folder of your choice (e.g. `Documents/fit_phd_lectures/`).
+
+Alternatively, if you have Git installed:
+```bash
+git clone https://github.com/frarent/fit_phd_lectures.git
+```
+
+**2. Open and run in Stata**
+
 All lab sessions use **Stata 19** (should work on previous versions as well). Open the corresponding Stata project file (e.g. `lab2.stpr`) within each lecture's `Lab/LN/` directory; required packages are bundled in the repository — no need to install packages separately.
 
 ---

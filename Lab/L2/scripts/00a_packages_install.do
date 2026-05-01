@@ -11,6 +11,7 @@ foreach name in  ///
 	grc1leg2 /// graph combine with common label
 	eventstudyinteract avar /// Sun and Abraham
 	did_multiplegt_dyn gtools /// Frenchies estimator
+	regsave egenmore ///
 		{
 		cap which `name'
 		if _rc==111 {

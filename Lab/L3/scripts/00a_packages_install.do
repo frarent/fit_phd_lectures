@@ -24,7 +24,7 @@ foreach name in synth  {
     }
 }
 
-net install st0500.pkg // synth_runner for full set of placebo test
+net install st0500, from(http://www.stata-journal.com/software/sj17-4) // synth_runner for full set of placebo test
 
 * IV and output packages
 foreach name in ivreg2 ranktest estout coefplot {

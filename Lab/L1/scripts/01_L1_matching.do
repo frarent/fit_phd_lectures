@@ -25,10 +25,6 @@ clear all
 set more off
 set seed 12345
 
-global proj_path ".."   // set to repo root when running from Lab/ subfolder
-
-set scheme plotplainblind
-
 * ============================================================================
 * EXERCISE 1: TITANIC — Subclassification and Selection Bias
 * ============================================================================
@@ -63,7 +59,7 @@ preserve
         subtitle("Unadjusted -- confounded by gender and age", size(small)) ///
         blabel(bar, format(%4.2f) size(vsmall)) ///
         scheme(plotplainblind)
-    graph export "${proj_path}/Figures/L1_surv_by_class.png", replace width(3000)
+    graph export "${figures_path}/L1_surv_by_class.png", replace width(3000)
 restore
 
 * (b) Covariate composition by class — shows why class predicts survival
@@ -78,7 +74,7 @@ preserve
         title("Covariate Composition by Class", size(medsmall)) ///
         subtitle("Confounders differ across classes", size(small)) ///
         scheme(plotplainblind)
-    graph export "${proj_path}/Figures/L1_confounders_by_class.png", replace width(3000)
+    graph export "${figures_path}/L1_confounders_by_class.png", replace width(3000)
 restore
 
 * (c) Survival by class x sex — within-group rates motivate stratification
@@ -94,7 +90,7 @@ preserve
         subtitle("Within-group rates motivate stratification", size(small)) ///
         legend(order(1 "Male" 2 "Female") size(small)) ///
         scheme(plotplainblind)
-    graph export "${proj_path}/Figures/L1_surv_class_sex.png", replace width(3000)
+    graph export "${figures_path}/L1_surv_class_sex.png", replace width(3000)
 restore
 
 
@@ -266,7 +262,7 @@ twoway (histogram pscore if treat==1, color(navy%60) lcolor(navy) ///
     subtitle("Before trimming", size(small)) ///
     xtitle("Estimated propensity score") ytitle("Frequency") ///
     scheme(plotplainblind)
-graph export "${proj_path}/Figures/L1_pscore_overlap.png", replace width(3000)
+graph export "${figures_path}/L1_pscore_overlap.png", replace width(3000)
 
 * Problem: CPS controls have very low propensity scores — poor overlap
 
@@ -295,7 +291,7 @@ twoway (histogram pscore if treat==1, color(navy%60) lcolor(navy) ///
     subtitle("After trimming (0.1 < p-score < 0.9)", size(small)) ///
     xtitle("Estimated propensity score") ytitle("Frequency") ///
     scheme(plotplainblind)
-graph export "${proj_path}/Figures/L1_pscore_trimmed.png", replace width(3000)
+graph export "${figures_path}/L1_pscore_trimmed.png", replace width(3000)
 
 * ----------------------------------------------------------------------------
 * 2.5 Part C2: IPW for ATT (manual, trimmed sample)
@@ -497,7 +493,7 @@ preserve
              size(vsmall)) ///
         legend(off) scheme(plotplainblind)
 
-    graph export "${proj_path}/Figures/L1_estimates.png", replace width(4000)
+    graph export "${figures_path}/L1_estimates.png", replace width(4000)
 restore
 
 * ============================================================================
