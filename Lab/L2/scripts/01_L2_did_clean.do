@@ -386,7 +386,7 @@ event_plot est_OLS sa_b#sa_v est_CA, ///
 graph export "${output_figures}/L2_ma_event_combined.png", replace width(5000)
 
 * ----------------------------------------------------------------------------
-* 2.8 De Chaisemartin & D'Haultfœuille (2024) — did_multiplegt_dyn
+* 2.8 De Chaisemartin & D'Haultfœuille (2024)
 * ----------------------------------------------------------------------------
 di as text _n "=== M&A: DID_MULTIPLEGT_DYN (DCDH 2024) ==="
 
