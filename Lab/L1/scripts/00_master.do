@@ -45,7 +45,7 @@ net set ado "stata_packages"
 * Run flags (0 = skip; 1 = run)
 * ============================================================================
 global install_packages  0
-global run_01_matching   1
+global run_01_matching   0
 
 
 * Open log

@@ -219,6 +219,9 @@ local b_exp   = _b[1.treat]
 local se_exp  = _se[1.treat]
 di as result "Experimental ATT = " %7.1f `b_exp' " (SE = " %7.1f `se_exp' ")"
 
+* ATE=ATT=ATU in EXPERIMENT, they only differ in observational settings
+
+
 * ----------------------------------------------------------------------------
 * 2.2 Part B: Observational sample — append CPS controls
 * ----------------------------------------------------------------------------
@@ -419,7 +422,76 @@ local se_dr = .   // no analytic SE implemented; omit CI from plot
 di as result "DR-ATT = " %7.1f `b_dr'
 
 * ----------------------------------------------------------------------------
-* 2.10 Summary table — all estimates vs. experimental benchmark
+* 2.10 Part D: Dehejia-Wahba (1999) replication
+* ----------------------------------------------------------------------------
+* DW (1999) show PS methods recover the experimental benchmark when:
+*   (i)  the pscore model satisfies the balancing property — within each
+*        pscore stratum, treated/control means do not differ on covariates
+*   (ii) trimming is done to the common support of the treated group
+* Key pscore extension vs. $covs: add educ×re74 interaction (interaction1).
+* DW target (JASA Table 3): NN matching ≈ $1,608.
+* ----------------------------------------------------------------------------
+di as text _n "=== DEHEJIA-WAHBA (1999) REPLICATION ==="
+
+preserve
+
+    * Reload full untrimmed observational sample
+    use "https://raw.github.com/scunning1975/mixtape/master/nsw_mixtape.dta", clear
+    drop if treat==0
+    append using "https://github.com/scunning1975/mixtape/raw/master/cps_mixtape.dta"
+
+    * DW covariate set: standard covariates + educ×re74 interaction
+    gen agesq        = age^2
+    gen agecube      = age^3
+    gen edusq        = educ^2
+    gen u74          = (re74==0)
+    gen u75          = (re75==0)
+    gen interaction1 = educ * re74
+
+    global dw_covs "age agesq agecube educ edusq marr nodegree black hisp re74 re75 u74 u75 interaction1"
+
+    * Step 1: Estimate DW propensity score
+    logit treat $dw_covs
+    predict pscore_dw, pr
+
+    * Step 2: Trim to common support (DW: within min/max of treated pscores)
+    sum pscore_dw if treat==1
+    drop if pscore_dw < r(min) | pscore_dw > r(max)
+
+    * Step 3: Balancing property check (5 pscore quintile blocks)
+    * Target: p > 0.10 in all cells (no significant covariate imbalance).
+    * DW iteratively split failing blocks and refine pscore until all pass.
+    di as text _n "Balancing property check — within-block t-test p-values"
+    di as text "  (target: p > 0.10 in all cells; DW iterates until satisfied)"
+    xtile qblock = pscore_dw, nq(5)
+    foreach var in re74 re75 age educ {
+        di as text _n "  `var':"
+        forvalues k = 1/5 {
+            qui count if treat==1 & qblock==`k'
+            local n1k = r(N)
+            qui count if treat==0 & qblock==`k'
+            local n0k = r(N)
+            if `n1k' > 1 & `n0k' > 1 {
+                qui ttest `var' if qblock==`k', by(treat)
+                di as text "    Q`k': t=" %5.2f r(t) "  p=" %5.3f r(p)
+            }
+            else {
+                di as text "    Q`k': insufficient obs in one group"
+            }
+        }
+    }
+
+    * Step 4: NN propensity score matching (1:1) — DW Table 3, target ~$1,608
+    di as text _n "--- DW nearest-neighbour PS matching ---"
+    teffects psmatch (re78) (treat $dw_covs, logit), atet nn(1)
+    local b_dw_nn  = e(b)[1,1]
+    local se_dw_nn = sqrt(e(V)[1,1])
+    di as result "DW NN ATT = " %7.1f `b_dw_nn' " (SE = " %7.1f `se_dw_nn' ")"
+
+restore
+
+* ----------------------------------------------------------------------------
+* 2.11 Summary table — all estimates vs. experimental benchmark
 * ----------------------------------------------------------------------------
 di as text _n "=== SUMMARY: All Estimates vs. Experimental Benchmark ==="
 di as text "Method                     |   ATT Estimate |   SE"
@@ -433,9 +505,10 @@ di as text "Mahalanobis + bias adj.    | " %14.1f `b_maha' " | " %6.1f `se_maha'
 di as text "Regression adjustment      | " %14.1f `b_ra'   " | " %6.1f `se_ra'
 di as text "CEM                        | " %14.1f `b_cem'  " | " %6.1f `se_cem'
 di as text "Doubly robust (manual)     | " %14.1f `b_dr'   " |    n/a  "
+di as text "DW NN matching (1999)      | " %14.1f `b_dw_nn'    " | " %6.1f `se_dw_nn'
 
 * ----------------------------------------------------------------------------
-* 2.11 Coefficient comparison plot
+* 2.12 Coefficient comparison plot
 * ----------------------------------------------------------------------------
 * Build a small dataset from the stored locals and plot with twoway.
 * This avoids coefplot's teffects naming quirks entirely.
@@ -443,9 +516,9 @@ di as text "Doubly robust (manual)     | " %14.1f `b_dr'   " |    n/a  "
 preserve
     clear
     * row = estimator; variables: b, lo, hi, label, order
-    local methods `" "RCT benchmark" "OLS" "IPW (manual)" "IPW (teffects)" "PS match" "Maha match" "Reg. adj." "CEM" "Doubly robust" "'
-    local bvals   "`b_exp'  `b_ols'  `b_ipw'  `b_tipw'  `b_psm'  `b_maha'  `b_ra'  `b_cem'  `b_dr'"
-    local sevals  "`se_exp' `se_ols' `se_ipw' `se_tipw' `se_psm' `se_maha' `se_ra' `se_cem' `se_dr'"
+    local methods `" "RCT benchmark" "OLS" "IPW (manual)" "IPW (teffects)" "PS match" "Maha match" "Reg. adj." "CEM" "Doubly robust" "DW NN match" "'
+    local bvals   "`b_exp'  `b_ols'  `b_ipw'  `b_tipw'  `b_psm'  `b_maha'  `b_ra'  `b_cem'  `b_dr'  `b_dw_nn'"
+    local sevals  "`se_exp' `se_ols' `se_ipw' `se_tipw' `se_psm' `se_maha' `se_ra' `se_cem' `se_dr' `se_dw_nn'"
 
     local n : word count `bvals'
     set obs `n'
@@ -469,8 +542,9 @@ preserve
     * y-axis labels: reverse order so RCT benchmark is on top
     gen ypos = `n' + 1 - order
     label define ylbl ///
-        9 "RCT benchmark" 8 "OLS" 7 "IPW (manual)" 6 "IPW (teffects)" ///
-        5 "PS match" 4 "Maha match" 3 "Reg. adj." 2 "CEM" 1 "DR (manual)"
+        10 "RCT benchmark" 9 "OLS" 8 "IPW (manual)" 7 "IPW (teffects)" ///
+        6 "PS match" 5 "Maha match" 4 "Reg. adj." 3 "CEM" 2 "DR (manual)" ///
+        1 "DW NN match"
     label values ypos ylbl
 
     * Highlight RCT benchmark in a different colour
@@ -484,12 +558,12 @@ preserve
         xline(0, lpattern(dash) lcolor(gs12)) ///
         xline(`b_exp', lpattern(shortdash) lcolor(navy) lwidth(thin)) ///
         xlabel(, format(%7.0f)) ///
-        ylabel(1/9, valuelabel angle(0) labsize(small)) ///
+        ylabel(1/10, valuelabel angle(0) labsize(small)) ///
         ytitle("") ///
         xtitle("ATT estimate (1978 earnings, USD)") ///
         title("LaLonde: Estimators vs. Experimental Benchmark", size(medsmall)) ///
         note("Blue line = experimental benchmark ($ 1,794). 95% CIs shown." ///
-             "All PS-based estimators use trimmed sample (0.1 < p-score < 0.9).", ///
+             "PS estimators: trimmed (0.1,0.9). DW estimators: common support of treated.", ///
              size(vsmall)) ///
         legend(off) scheme(plotplainblind)
 
