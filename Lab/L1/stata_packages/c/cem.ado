@@ -109,4 +109,4 @@ return local L1_breaks = "`imbbreaks'"
 end
 
 version 10.1
-do "`c(sysdir_plus)'c/cem-mata.do"
+do "stata_packages/c/cem-mata.do"
