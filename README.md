@@ -71,7 +71,7 @@ All lab sessions use **Stata 19** (should work on previous versions as well). Op
 
 ## Slides & notes
 
-Slides (`Slides/`) and instructor notes (`notes/`) are excluded from version control and will be made available after the 7th of May.
+Slides (`Slides/`) are excluded from version control and will be made available after the 7th of May.
 
 ---
 
