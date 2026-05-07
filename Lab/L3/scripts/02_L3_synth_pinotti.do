@@ -57,6 +57,8 @@ di "Outcome: gdppercap (GDP per capita, constant 1990 euros)"
 tabstat gdppercap if (reg < 15 | reg == 20 | reg == 21) & year<1975, ///
     by(reg) statistics(mean) columns(statistics)
 
+tabstat gdppercap if (reg < 15 | reg == 20 | reg == 21) & year>=1975, ///
+    by(reg) statistics(mean) columns(statistics)
 
 
 * ----------------------------------------------------------------------------

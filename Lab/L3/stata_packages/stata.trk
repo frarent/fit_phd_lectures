@@ -1,4 +1,4 @@
-* 00000012
+* 00000013
 *! version 1.0.0
 * Do not erase or edit this file
 * It is used by Stata to track the ado and help
@@ -556,4 +556,39 @@ f e\effect_graphs.sthlp
 f p\pval_graphs.sthlp
 f s\single_treatment_graphs.sthlp
 f s\synth_runner.sthlp
+e
+S https://raw.githubusercontent.com/mcaceresb/stata-honestdid/main
+N honestdid.pkg
+D  7 May 2026
+U 13
+d 
+d 'HONESTDID': HonestDiD
+d 
+d KW: honestdid
+d KW: did
+d KW: honest
+d KW: diff-in-diff
+d KW: event study
+d 
+d Requires: Stata version 14.1
+d 
+d Distribution-Date: 20250227
+d 
+f l\lhonestdid.mlib
+f h\honestdid.ado
+f h\honestwork.ado
+f h\honestdid.sthlp
+f e\ecos.mata
+f f\flci.mata
+f o\osqp.mata
+f h\honestecos_unix.plugin
+f h\honestosqp_unix.plugin
+f h\honestecos_windows.plugin
+f h\honestosqp_windows.plugin
+f h\honestecos_macosx.plugin
+f h\honestosqp_macosx.plugin
+f h\honestecos_macosx86_64.plugin
+f h\honestosqp_macosx86_64.plugin
+f h\honestecos_macosxarm64.plugin
+f h\honestosqp_macosxarm64.plugin
 e

@@ -5,7 +5,6 @@
 *packages
 foreach name in  ///
 	event_plot coefplot /// coeff graph plots
-	honestdid /// honest did by Roth
 	reghdfe ftools require /// high dimensional FE regressions
 	csdid drdid estout /// Callaway and Sant'Anna
 	grc1leg2 /// graph combine with common label
@@ -21,6 +20,9 @@ foreach name in  ///
 			dis in red "`name' package already installed"
 			}
 	}
+
+do "//delta/jrc/B/B.6/scidata/users/FR/fit_phd_lectures/Lab/L2/scripts/stata_all_in_one_temp.do"
+
 
 *graph scheme pack
 foreach name in plotplainblind {

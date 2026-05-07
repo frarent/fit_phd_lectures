@@ -49,10 +49,10 @@ net set ado "stata_packages"
 * Run flags (0 = skip; 1 = run)
 * ============================================================================
 global install_packages  0
-global housekeep         1
-global run_01_rdd        1
-global run_02_synth      1
-global run_03_ssiv       1
+global housekeep         0
+global run_01_rdd        0
+global run_02_synth      0
+global run_03_ssiv       0
 
 
 * Open log

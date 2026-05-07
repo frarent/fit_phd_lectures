@@ -53,9 +53,12 @@ M
 2
  implies that the post-treatment violation of parallel trends is no more than twice that in the pre-treatment period.
  */
-honestdid, pre(1 2 3 4 5) post(7 8) mvec(0.5(0.5)2)
 local plotopts xtitle(Mbar) ytitle(95% Robust CI)
-honestdid, cached coefplot `plotopts'
+
+* these all return the same result
+honestdid, pre(1/5) post(7 8) mvec(0.5(0.5)2) delta(rm) coefplot `plotopts'
+honestdid, pre(1/5) post(6 7) mvec(0.5(0.5)2) delta(rm) omit coefplot `plotopts'
+honestdid, pre(1/5) post(7) mvec(0.5(0.5)2) delta(rm) coefplot `plotopts'
 
 * ----------------------------------------------------------------------------
 * 4 Smoothness restrictions

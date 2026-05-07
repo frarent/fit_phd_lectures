@@ -1,4 +1,4 @@
-* 00000011
+* 00000012
 *! version 1.0.0
 * Do not erase or edit this file
 * It is used by Stata to track the ado and help
@@ -523,4 +523,37 @@ f s\synth_ll.ado
 f s\synth.sthlp
 f l\lsynth_mata_subr.mlib
 f s\synthopt.plugin
+e
+S http://www.stata-journal.com/software/sj17-4
+N st0500.pkg
+D 30 Apr 2026
+U 12
+d SJ17-4 st0500. Automation for multiple synthetic...
+d Automation for multiple synthetic control
+d   estimations
+d by Sebastian Galiani, University of Maryland,
+d      College Park, MD
+d    Brian Quistorff, Microsoft AI and Research,
+d      Redmond, WA
+d Support:  galiani@econ.umd.edu,
+d           Brian.Quistorff@microsoft.com
+d After installation, type help {cmd:effect_graphs},
+d   {cmd:pval_graphs}, {cmd:single_treatment_graphs}, and
+d   {cmd:synth_runner}
+f c\calc_rmspe.ado
+f e\effect_graphs.ado
+f p\pval_graphs.ado
+f s\single_treatment_graphs.ado
+f _\_sr_add_keepfile_to_agg.ado
+f _\_sr_do_work_do.ado
+f _\_sr_do_work_tr.ado
+f _\_sr_gen_time_locals.ado
+f _\_sr_get_returns.ado
+f _\_sr_print_dots.ado
+f s\synth_runner.ado
+f s\synth_wrapper.ado
+f e\effect_graphs.sthlp
+f p\pval_graphs.sthlp
+f s\single_treatment_graphs.sthlp
+f s\synth_runner.sthlp
 e
