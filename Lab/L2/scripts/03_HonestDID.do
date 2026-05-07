@@ -53,6 +53,10 @@ M
 2
  implies that the post-treatment violation of parallel trends is no more than twice that in the pre-treatment period.
  */
+
+mata: mata mlib index //clean mata library to avoid honestdid parse error
+
+
 local plotopts xtitle(Mbar) ytitle(95% Robust CI)
 
 * these all return the same result
