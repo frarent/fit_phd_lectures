@@ -118,64 +118,6 @@ preserve
     di as result "Joint F-test p-value (pre-trends) = " %6.4f r(p)
 restore
 
-* ----------------------------------------------------------------------------
-* 1.5 Dynamic TWFE event study
-* ----------------------------------------------------------------------------
-di as text _n "=== DoE: DYNAMIC TWFE EVENT STUDY ==="
-
-* Relative-time variable (treatment cohort 2018; controls anchored at 2018)
-gen treat_year   = 2018 if treated == 1
-gen time_to_treat = year - treat_year if treated == 1
-replace time_to_treat = year - 2018   if treated == 0
-
-* Relative-time dummies: window −5 to +2; t = −1 is baseline (dropped)
-cap drop F*event L*event
-forvalues l = 0/2 {
-    gen L`l'event = (time_to_treat ==  `l') & treated == 1
-}
-forvalues l = 2/5 {
-    gen F`l'event = (time_to_treat == -`l') & treated == 1
-}
-
-reghdfe new_position F*event L*event, a(id year) cluster(id)
-est store doe_es_twfe
-
-event_plot doe_es_twfe, stub_lag(L#event) stub_lead(F#event) ///
-    together plottype(scatter) trimlead(5) trimlag(2) ///
-    graph_opt(yline(0, lpattern(dash)) ///
-        ylabel(, format(%3.2f)) xlabel(-5(1)2) ///
-        xtitle("Year relative to DoE award") ///
-        ytitle("New positions (ATT)") ///
-        title("DoE: Event Study (TWFE)", size(medsmall)) ///
-        note("Baseline = t{subscript:-1}. 95% CIs. Clustered SEs by department.", ///
-             size(vsmall))) ///
-    lag_opt1(msymbol(circle) mcolor(navy)) lag_ci_opt1(color(navy%60))
-graph export "$output_figures/L2_doe_event_twfe.png", replace width(3000)
-
-* ----------------------------------------------------------------------------
-* 1.6 Callaway & Sant'Anna (2021) — csdid
-* ----------------------------------------------------------------------------
-di as text _n "=== DoE: CALLAWAY & SANT'ANNA ESTIMATOR ==="
-
-* Single cohort: gvar = 2018 for treated, 0 for never-treated
-gen gvar = cond(treated == 1, 2018, 0)
-
-* Without covariates
-csdid new_position, ivar(id) time(year) gvar(gvar) long2
-estat simple
-estat event
-
-* With covariates (doubly-robust)
-csdid new_position $covar, ivar(id) time(year) gvar(gvar) long2
-estat simple
-estat event
-
-csdid_plot, ///
-    title("DoE: Event Study (Callaway & Sant'Anna)", size(medsmall)) ///
-    ytitle("New positions (ATT)") xtitle("Year relative to DoE award") ///
-    ylabel(, format(%3.2f)) ///
-    note("Not-yet-treated comparison group. Doubly robust estimator.", size(vsmall))
-graph export "$output_figures/L2_doe_event_cs.png", replace width(3000)
 
 
 * ============================================================================

@@ -1,56 +1,13 @@
-* 00000019
+* 00000018
 *! version 1.0.0
 * Do not erase or edit this file
 * It is used by Stata to track the ado and help
 * files you have installed.
 
 S http://fmwww.bc.edu/repec/bocode/e
-N estout.pkg
-D 23 Apr 2026
-U 1
-d 'ESTOUT': module to make regression tables
-d 
-d  estout produces a table of regression results from one or
-d several models for use with spreadsheets, LaTeX, HTML, or a
-d word-processor table. eststo stores a quick copy of the active
-d estimation results for later tabulation. esttab is a wrapper for
-d estout. It displays a pretty looking publication-style regression
-d table without much typing. estadd adds additional results to the
-d e()-returns for one or several models previously fitted and
-d stored. This package subsumes the previously circulated esto,
-d esta, estadd,  and estadd_plus. An earlier version of estout is
-d available  as estout1.
-d 
-d KW: estimates
-d KW: LaTeX
-d KW: HTML
-d KW: word processor
-d KW: output
-d 
-d Requires: Stata version 8.2
-d 
-d Distribution-Date: 20260413
-d 
-d Author: Ben Jann, University of Bern
-d Support: email jann@@soz.unibe.ch
-d 
-f _\_eststo.ado
-f _\_eststo.hlp
-f e\estadd.ado
-f e\estadd.hlp
-f e\estout.ado
-f e\estout.hlp
-f e\eststo.ado
-f e\eststo.hlp
-f e\estpost.ado
-f e\estpost.hlp
-f e\esttab.ado
-f e\esttab.hlp
-e
-S http://fmwww.bc.edu/repec/bocode/e
 N event_plot.pkg
-D 23 Apr 2026
-U 2
+D  8 May 2026
+U 1
 d 'EVENT_PLOT': module to plot the staggered-adoption diff-in-diff ("event study") estimates
 d 
 d  This routine plots the staggered-adoption diff-in-diff ("event
@@ -78,8 +35,8 @@ f e\event_plot.sthlp
 e
 S http://fmwww.bc.edu/repec/bocode/c
 N coefplot.pkg
-D 23 Apr 2026
-U 3
+D  8 May 2026
+U 2
 d 'COEFPLOT': module to plot regression coefficients and other results
 d 
 d   coefplot plots results from estimation commands or Stata
@@ -103,56 +60,10 @@ d
 f c\coefplot.ado
 f c\coefplot.sthlp
 e
-S http://fmwww.bc.edu/repec/bocode/h
-N honestdid.pkg
-D 23 Apr 2026
-U 4
-d 'HONESTDID': module implementing the HonestDiD R package
-d 
-d     Stata version of the HonestDiD R package, which implements
-d robust inference for difference-in-differences and event study
-d design    methods developed in Rambachan and Roth (2021). See the
-d examples section below for an illustration of how users can use
-d this   package to conduct sensitivity analysis on the parallel
-d trends assumption in difference-in-differences and event study
-d designs.
-d 
-d KW: DiD
-d KW: difference in differences
-d KW: parallel trends
-d 
-d Requires: Stata version 14.1
-d 
-d Distribution-Date: 20240322
-d 
-d Author: Mauricio Caceres Bravo, Brown University
-d Support: email mauricio.caceres.bravo@@gmail.com
-d 
-d Author: Jonathan Roth, Brown University
-d Support: email jonathan_roth@@brown.edu
-d 
-d Author: Ashesh Rambachan, MIT
-d Support: email ashesh.a.rambachan@@gmail.com
-d 
-f h\honestdid.ado
-f h\honestwork.ado
-f h\honestdid.sthlp
-f h\honestecos_macosx.plugin
-f h\honestecos_macosx86_64.plugin
-f h\honestecos_macosxarm64.plugin
-f h\honestecos_unix.plugin
-f h\honestecos_windows.plugin
-f h\honestosqp_macosx.plugin
-f h\honestosqp_macosx86_64.plugin
-f h\honestosqp_macosxarm64.plugin
-f h\honestosqp_unix.plugin
-f h\honestosqp_windows.plugin
-f l\lhonestdid.mlib
-e
 S http://fmwww.bc.edu/repec/bocode/r
 N reghdfe.pkg
-D 23 Apr 2026
-U 5
+D  8 May 2026
+U 3
 d 'REGHDFE': module to perform linear or instrumental-variable regression absorbing any number of high-dimensional fixed effects
 d 
 d  reghdfe fits a linear or instrumental-variable regression
@@ -202,8 +113,8 @@ f r\reghdfe_programming.sthlp
 e
 S http://fmwww.bc.edu/repec/bocode/f
 N ftools.pkg
-D 23 Apr 2026
-U 6
+D  8 May 2026
+U 4
 d 'FTOOLS': module to provide alternatives to common Stata commands optimized for large datasets
 d 
 d  ftools consists of a Mata file and several Stata commands: The
@@ -280,10 +191,37 @@ f p\parallel_map_template.do.ado
 f p\parallel_map.ado
 f p\parallel_map.sthlp
 e
+S http://fmwww.bc.edu/repec/bocode/r
+N require.pkg
+D  8 May 2026
+U 5
+d 'REQUIRE': module to ensure that installed packages have a minimum or exact version.
+d 
+d    Use require to help the reproductibility of your research, by
+d ensuring that people that run your code are using    compatible
+d versions of the packages you use (either minimum versions, of
+d exact versions).
+d 
+d KW: programming
+d KW: reproducibility
+d 
+d Requires: Stata version 14
+d 
+d Distribution-Date: 20230921
+d 
+d Author: Sergio Correia, Board of Governors of the Federal Reserve System
+d Support: email sergio.correia@@gmail.com
+d 
+d Author: Matthew P. Seay, Board of Governors of the Federal Reserve System
+d Support: email matt.seay@@frb.gov
+d 
+f r\require.ado
+f r\require.sthlp
+e
 S http://fmwww.bc.edu/repec/bocode/c
 N csdid.pkg
-D 23 Apr 2026
-U 7
+D  8 May 2026
+U 6
 d 'CSDID': module for the estimation of Difference-in-Difference models with multiple time periods
 d 
 d  CSDID implements Callaway and Sant'Anna (2020) estimator for DID
@@ -329,8 +267,8 @@ f c\csdid_postestimation.sthlp
 e
 S http://fmwww.bc.edu/repec/bocode/d
 N drdid.pkg
-D 23 Apr 2026
-U 8
+D  8 May 2026
+U 7
 d 'DRDID': module for the estimation of Doubly Robust Difference-in-Difference models
 d 
 d  DRDID implements Sant'Anna and Zhao (2020) proposed estimators
@@ -371,104 +309,53 @@ f _\_gmm_dripw.ado
 f _\_gmm_repeated.ado
 f d\drdid.sthlp
 e
-S http://fmwww.bc.edu/repec/bocode/b
-N blindschemes.pkg
-D 23 Apr 2026
-U 9
-d 'BLINDSCHEMES': module to provide graph schemes sensitive to color vision deficiency
+S http://fmwww.bc.edu/repec/bocode/e
+N estout.pkg
+D  8 May 2026
+U 8
+d 'ESTOUT': module to make regression tables
 d 
-d  While Stata's computational capabilities have intensively
-d increased over the last decade, the quality of its default figure
-d schemes is still a matter of debate amongst users. Clearly some
-d of the arguments speaking against Stata figures are subject to
-d individual taste, but others are not, such as for instance:
-d horizontal labelling, unnecessary background tinting, missing
-d gridlines, oversized markers. The two schemes introduced here
-d attempt to solve the major shortcomings of Stata's default figure
-d schemes.  The schemes come with 21 new colors, of which seven
-d colors are distinguishable for people suffering from color
-d blindness.  This package provides users with four new figure
-d schemes: plotplain (plain and simple plotting environment, avoids
-d chartjunk); plotplainblind (plain and simple plotting
-d environment, avoids chartjunk + colorblind friendly); plottig
-d (replicates R ggplot in most regards); plottigblind (replicates R
-d ggplot in most regards + colorblind friendly)
+d  estout produces a table of regression results from one or
+d several models for use with spreadsheets, LaTeX, HTML, or a
+d word-processor table. eststo stores a quick copy of the active
+d estimation results for later tabulation. esttab is a wrapper for
+d estout. It displays a pretty looking publication-style regression
+d table without much typing. estadd adds additional results to the
+d e()-returns for one or several models previously fitted and
+d stored. This package subsumes the previously circulated esto,
+d esta, estadd,  and estadd_plus. An earlier version of estout is
+d available  as estout1.
 d 
-d KW: graphics
-d KW: schemes
-d KW: color vision deficiency
-d KW: color blindness
-d KW: chartjunk
+d KW: estimates
+d KW: LaTeX
+d KW: HTML
+d KW: word processor
+d KW: output
 d 
-d Requires: Stata version 12
+d Requires: Stata version 8.2
 d 
-d Distribution-Date: 20200807
+d Distribution-Date: 20260413
 d 
-d Author: Daniel Bischof, University of Zurich
-d Support: email bischof@@ipz.uzh.ch
+d Author: Ben Jann, University of Bern
+d Support: email jann@@soz.unibe.ch
 d 
-f b\blindschemes.sthlp
-f s\scheme-plotplain.scheme
-f s\scheme-plotplainblind.scheme
-f s\scheme-plottig.scheme
-f s\scheme-plottigblind.scheme
-f p\plotplain.sthlp
-f p\plotplainblind.sthlp
-f p\plottig.sthlp
-f p\plottigblind.sthlp
-f style\color-vermillion.style
-f style\color-sky.style
-f style\color-reddish.style
-f style\color-orangebrown.style
-f style\color-ananas.style
-f style\color-turquoise.style
-f style\color-sea.style
-f style\color-plb1.style
-f style\color-plb2.style
-f style\color-plb3.style
-f style\color-plg1.style
-f style\color-plg2.style
-f style\color-plg3.style
-f style\color-pll1.style
-f style\color-pll2.style
-f style\color-pll3.style
-f style\color-plr1.style
-f style\color-plr2.style
-f style\color-ply1.style
-f style\color-ply2.style
-f style\color-ply3.style
-e
-S http://fmwww.bc.edu/repec/bocode/r
-N require.pkg
-D 23 Apr 2026
-U 10
-d 'REQUIRE': module to ensure that installed packages have a minimum or exact version.
-d 
-d    Use require to help the reproductibility of your research, by
-d ensuring that people that run your code are using    compatible
-d versions of the packages you use (either minimum versions, of
-d exact versions).
-d 
-d KW: programming
-d KW: reproducibility
-d 
-d Requires: Stata version 14
-d 
-d Distribution-Date: 20230921
-d 
-d Author: Sergio Correia, Board of Governors of the Federal Reserve System
-d Support: email sergio.correia@@gmail.com
-d 
-d Author: Matthew P. Seay, Board of Governors of the Federal Reserve System
-d Support: email matt.seay@@frb.gov
-d 
-f r\require.ado
-f r\require.sthlp
+f _\_eststo.ado
+f _\_eststo.hlp
+f e\estadd.ado
+f e\estadd.hlp
+f e\estout.ado
+f e\estout.hlp
+f e\eststo.ado
+f e\eststo.hlp
+f e\estpost.ado
+f e\estpost.hlp
+f e\esttab.ado
+f e\esttab.hlp
 e
 S http://fmwww.bc.edu/repec/bocode/g
 N grc1leg2.pkg
-D 23 Apr 2026
-U 11
+D  8 May 2026
+U 9
 d 'GRC1LEG2': module to combine multiple graphs with a single common legend
 d 
 d    grc1leg2 is an enhanced version of Vince Wiggins' grc1leg.
@@ -499,66 +386,10 @@ f g\grc1leg2.sthlp
 f g\grc1leg2_examples.ado
 f g\grc1leg2.dlg
 e
-S http://fmwww.bc.edu/repec/bocode/b
-N bacondecomp.pkg
-D 23 Apr 2026
-U 12
-d 'BACONDECOMP': module to perform a Bacon decomposition of difference-in-differences estimation
-d 
-d  bacondecomp shows a Bacon decomposition of
-d difference-in-differences estimation with    variation in
-d treatment timing.  The two-way fixed effects   DD model is a
-d weighted average of all possible two-group/two period DD
-d estimators. The    command generates a scatterplot of 2x2
-d difference-in-difference estimates and their   associated
-d weights. The data must be xtset and the variable list must
-d include an outcome as    the first item, and a treatment that can
-d only turn from zero to one during the time period    examined as
-d its second item.
-d 
-d KW: Bacon decomposition
-d KW: DiD
-d KW: difference-in-differences
-d 
-d Requires: Stata version 10.2
-d 
-d Distribution-Date: 20220921
-d 
-d Author:    Andrew Goodman-Bacon
-d Support: email    andrew.j.goodman-bacon@@vanderbilt.edu
-d 
-d Author:    Thomas Goldring
-d Support: email    thomasgoldring@@gmail.com
-d 
-d Author: Austin Nichols
-d Support: email austinnichols@@gmail.com
-d 
-f b\bacon.sthlp
-f b\baconde.ado
-f b\bac.sthlp
-f b\bacondecomp.sthlp
-f b\ba.sthlp
-f b\b.sthlp
-f b\baconde.sthlp
-f b\bacondec.ado
-f b\bacond.sthlp
-f b\bacondecom.ado
-f b\bacondecomp.ado
-f b\bacondecom.sthlp
-f b\ba.ado
-f b\baco.ado
-f b\bacon.ado
-f b\baco.sthlp
-f b\bac.ado
-f b\b.ado
-f b\bacondeco.sthlp
-f b\bacondec.sthlp
-f b\bacondeco.ado
-e
 S http://fmwww.bc.edu/repec/bocode/e
 N eventstudyinteract.pkg
-D 23 Apr 2026
-U 13
+D  8 May 2026
+U 10
 d 'EVENTSTUDYINTERACT': module to implement the interaction weighted estimator for an event study
 d 
 d   To estimate the dynamic effects of an absorbing treatment,
@@ -594,8 +425,8 @@ f e\eventstudyinteract.sthlp
 e
 S http://fmwww.bc.edu/repec/bocode/a
 N avar.pkg
-D 23 Apr 2026
-U 14
+D  8 May 2026
+U 11
 d 'AVAR': module to perform asymptotic covariance estimation for iid and non-iid data robust to heteroskedasticity, autocorrelation, 1- and 2-way clustering, and common cross-panel autocorrelated dis
 d 
 d  avar} is a routine for estimating S, the asymptotic variance of
@@ -633,8 +464,8 @@ f l\livreg2.mlib
 e
 S http://fmwww.bc.edu/repec/bocode/d
 N did_multiplegt_dyn.pkg
-D 23 Apr 2026
-U 15
+D  8 May 2026
+U 12
 d 'DID_MULTIPLEGT_DYN': module to estimate event-study Difference-in-Difference (DID) estimators in designs with multiple groups and periods, with a potentially non-binary treatment that may increase
 d 
 d did_multiplegt_dyn estimates the effect of a treatment on
@@ -682,8 +513,8 @@ f d\did_multiplegt_dyn.sthlp
 e
 S http://fmwww.bc.edu/repec/bocode/g
 N gtools.pkg
-D 23 Apr 2026
-U 16
+D  8 May 2026
+U 13
 d 'GTOOLS': module to provide a fast implementation of common group commands
 d 
 d    gtools is a Stata package that provides a fast implementation
@@ -770,8 +601,8 @@ f l\lgtools.mlib
 e
 S http://fmwww.bc.edu/repec/bocode/r
 N regsave.pkg
-D  1 May 2026
-U 17
+D  8 May 2026
+U 14
 d 'REGSAVE': module to save regression results to a Stata-formatted dataset
 d 
 d  regsave fetches output from Stata's e() macros, scalars, and
@@ -803,8 +634,8 @@ f r\regsave_tbl.hlp
 e
 S http://fmwww.bc.edu/repec/bocode/e
 N egenmore.pkg
-D  1 May 2026
-U 18
+D  8 May 2026
+U 15
 d 'EGENMORE': modules to extend the generate function
 d 
 d  This package includes various -egen- functions. For full
@@ -908,10 +739,207 @@ f _\_grownvals.ado
 f _\_growsvals.ado
 f _\_gtruncdig.ado
 e
+S https://raw.githubusercontent.com/mcaceresb/stata-gtools/master/build
+N gtools.pkg
+D  8 May 2026
+U 16
+d 
+d 'GTOOLS': Faster implementation of common Stata commands optimized for large datasets
+d 
+d Faster Stata for big data. Gtools provides a hash-based implementation
+d of common Stata commands using C plugins for a massive speed
+d improvement. Gtools implements gcollapse, greshape, gquantiles
+d (pctile, xtile, and _pctile), gcontract, gegen, gisid, glevelsof,
+d gunique, gdistinct, gduplicates, gtop, and gstats (winsor, summarize,
+d tabstat). Syntax is largely analogous to their native counterparts
+d (see help gtools for details). This package was inspired by Sergio
+d Correia's ftools.
+d 
+d KW: plugin
+d KW: gtools
+d KW: collapse
+d KW: reshape
+d KW: regress
+d KW: ivregress
+d KW: glm
+d KW: logit
+d KW: poisson
+d KW: residualize
+d KW: hdfe
+d KW: contract
+d KW: egen
+d KW: xtile
+d KW: fastxtile
+d KW: pctile
+d KW: _pctile
+d KW: levelsof
+d KW: toplevelsof
+d KW: isid
+d KW: duplicates
+d KW: unique
+d KW: distinct
+d KW: sort
+d KW: gsort
+d KW: gegen
+d KW: fasterxtile
+d KW: gquantiles
+d KW: gcollapse
+d KW: greshape
+d KW: gregress
+d KW: givregress
+d KW: gglm
+d KW: gpoisson
+d KW: glogit
+d KW: gcontract
+d KW: gisid
+d KW: gduplicates
+d KW: glevelsof
+d KW: gtoplevelsof
+d KW: gunique
+d KW: gdistinct
+d KW: hashsort
+d KW: winsor
+d KW: summarize
+d KW: tabstat
+d 
+d Requires: Stata version 13.1
+d 
+d Author: Mauricio Caceres Bravo
+d Support: email mauricio.caceres.bravo@gmail.com
+d 
+d Distribution-Date: 20240628
+d 
+f _\_gtools_internal.ado
+f _\_gtools_internal.mata
+f g\gcollapse.ado
+f g\gcontract.ado
+f g\gegen.ado
+f g\gquantiles.ado
+f f\fasterxtile.ado
+f g\gunique.ado
+f g\gdistinct.ado
+f g\glevelsof.ado
+f g\gtop.ado
+f g\gtoplevelsof.ado
+f g\gisid.ado
+f g\gduplicates.ado
+f h\hashsort.ado
+f g\greshape.ado
+f g\greg.ado
+f g\gregress.ado
+f g\givregress.ado
+f g\gglm.ado
+f g\gpoisson.ado
+f g\gstats.ado
+f g\gtools.ado
+f g\gcollapse.sthlp
+f g\gcontract.sthlp
+f g\gegen.sthlp
+f g\gquantiles.sthlp
+f f\fasterxtile.sthlp
+f g\gunique.sthlp
+f g\gdistinct.sthlp
+f g\glevelsof.sthlp
+f g\gtop.sthlp
+f g\gtoplevelsof.sthlp
+f g\gisid.sthlp
+f g\gduplicates.sthlp
+f h\hashsort.sthlp
+f g\greshape.sthlp
+f g\greg.sthlp
+f g\gregress.sthlp
+f g\givregress.sthlp
+f g\gglm.sthlp
+f g\gstats.sthlp
+f g\gstats_residualize.sthlp
+f g\gstats_hdfe.sthlp
+f g\gstats_winsor.sthlp
+f g\gstats_tab.sthlp
+f g\gstats_sum.sthlp
+f g\gstats_summarize.sthlp
+f g\gstats_transform.sthlp
+f g\gstats_range.sthlp
+f g\gstats_moving.sthlp
+f g\gtools.sthlp
+f l\lgtools.mlib
+f g\gtools_windows_v2.plugin
+f g\gtools_unix_v2.plugin
+f g\gtools_macosx_v2.plugin
+f g\gtools_windows_v3.plugin
+f g\gtools_unix_v3.plugin
+f g\gtools_macosx_v3.plugin
+e
+S http://fmwww.bc.edu/repec/bocode/b
+N blindschemes.pkg
+D  8 May 2026
+U 17
+d 'BLINDSCHEMES': module to provide graph schemes sensitive to color vision deficiency
+d 
+d  While Stata's computational capabilities have intensively
+d increased over the last decade, the quality of its default figure
+d schemes is still a matter of debate amongst users. Clearly some
+d of the arguments speaking against Stata figures are subject to
+d individual taste, but others are not, such as for instance:
+d horizontal labelling, unnecessary background tinting, missing
+d gridlines, oversized markers. The two schemes introduced here
+d attempt to solve the major shortcomings of Stata's default figure
+d schemes.  The schemes come with 21 new colors, of which seven
+d colors are distinguishable for people suffering from color
+d blindness.  This package provides users with four new figure
+d schemes: plotplain (plain and simple plotting environment, avoids
+d chartjunk); plotplainblind (plain and simple plotting
+d environment, avoids chartjunk + colorblind friendly); plottig
+d (replicates R ggplot in most regards); plottigblind (replicates R
+d ggplot in most regards + colorblind friendly)
+d 
+d KW: graphics
+d KW: schemes
+d KW: color vision deficiency
+d KW: color blindness
+d KW: chartjunk
+d 
+d Requires: Stata version 12
+d 
+d Distribution-Date: 20200807
+d 
+d Author: Daniel Bischof, University of Zurich
+d Support: email bischof@@ipz.uzh.ch
+d 
+f b\blindschemes.sthlp
+f s\scheme-plotplain.scheme
+f s\scheme-plotplainblind.scheme
+f s\scheme-plottig.scheme
+f s\scheme-plottigblind.scheme
+f p\plotplain.sthlp
+f p\plotplainblind.sthlp
+f p\plottig.sthlp
+f p\plottigblind.sthlp
+f style\color-vermillion.style
+f style\color-sky.style
+f style\color-reddish.style
+f style\color-orangebrown.style
+f style\color-ananas.style
+f style\color-turquoise.style
+f style\color-sea.style
+f style\color-plb1.style
+f style\color-plb2.style
+f style\color-plb3.style
+f style\color-plg1.style
+f style\color-plg2.style
+f style\color-plg3.style
+f style\color-pll1.style
+f style\color-pll2.style
+f style\color-pll3.style
+f style\color-plr1.style
+f style\color-plr2.style
+f style\color-ply1.style
+f style\color-ply2.style
+f style\color-ply3.style
+e
 S https://raw.githubusercontent.com/mcaceresb/stata-honestdid/main
 N honestdid.pkg
-D  7 May 2026
-U 19
+D  8 May 2026
+U 18
 d 
 d 'HONESTDID': HonestDiD
 d 

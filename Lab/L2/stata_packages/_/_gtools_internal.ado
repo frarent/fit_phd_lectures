@@ -1,4 +1,4 @@
-*! version 1.10.1 05Dec2022 Mauricio Caceres Bravo, mauricio.caceres.bravo@gmail.com
+*! version 1.11.8 28Jun2024 Mauricio Caceres Bravo, mauricio.caceres.bravo@gmail.com
 *! gtools function internals
 
 * rc 17000
@@ -49,6 +49,7 @@ program _gtools_internal, rclass
         tempfile gregvcovfile
         tempfile gregclusfile
         tempfile gregabsfile
+        tempfile greginfofile
         tempfile ghdfeabsfile
         tempfile gstatsfile
         tempfile gbyvarfile
@@ -64,6 +65,7 @@ program _gtools_internal, rclass
         GtoolsTempFile gregvcovfile
         GtoolsTempFile gregclusfile
         GtoolsTempFile gregabsfile
+        GtoolsTempFile greginfofile
         GtoolsTempFile ghdfeabsfile
         GtoolsTempFile gstatsfile
         GtoolsTempFile gbyvarfile
@@ -79,6 +81,7 @@ program _gtools_internal, rclass
     global GTOOLS_GREGVCOV_FILE: copy local gregvcovfile
     global GTOOLS_GREGCLUS_FILE: copy local gregclusfile
     global GTOOLS_GREGABS_FILE:  copy local gregabsfile
+    global GTOOLS_GREGINFO_FILE: copy local greginfofile
     global GTOOLS_GHDFEABS_FILE: copy local ghdfeabsfile
     global GTOOLS_GSTATS_FILE:   copy local gstatsfile
     global GTOOLS_BYVAR_FILE:    copy local gbyvarfile
@@ -727,6 +730,7 @@ program _gtools_internal, rclass
     mata: st_numscalar("__gtools_gfile_gregvcov", strlen(st_local("gregvcovfile")) + 1)
     mata: st_numscalar("__gtools_gfile_gregclus", strlen(st_local("gregclusfile")) + 1)
     mata: st_numscalar("__gtools_gfile_gregabs",  strlen(st_local("gregabsfile"))  + 1)
+    mata: st_numscalar("__gtools_gfile_greginfo", strlen(st_local("greginfofile")) + 1)
     mata: st_numscalar("__gtools_gfile_ghdfeabs", strlen(st_local("ghdfeabsfile")) + 1)
 
     scalar __gtools_init_targ   = 0
@@ -1709,6 +1713,8 @@ program _gtools_internal, rclass
                 GENerate(str)                /// save in varlist
                 prefix(str)                  /// save prepending prefix
                 PREDict(str)                 /// save fit in `predict'
+                alphas(str)                  /// save fixed effects in `alphas'
+                savecons                     /// save estimate for constant (memory-intensive)
                 resid                        /// save residuals in _resid_`yvarlist'
                 RESIDuals(str)               /// save residuals in `residuals'
                 replace                      /// Replace targets, if they exist
@@ -1888,12 +1894,25 @@ program _gtools_internal, rclass
                 exit `rc'
             }
 
+            if ( `"`alphas'"' != "" ) {
+                if ( `:list sizeof alphas' != `:list sizeof absorb' ) {
+                    disp as err "alphas() must specify one target per absorb variable"
+                    local rc = 198
+                    clean_all `rc'
+                    exit `rc'
+                }
+            }
+
             local regressvars `varlist' `cluster' `absorb' `intervalvar'
 
             scalar __gtools_gregress_hdfemethnm    = cond(`:list sizeof absorb' > 1, "`method'", "direct")
             scalar __gtools_gregress_hdfemethod    = `method_code'
             scalar __gtools_gregress_kvars         = `:list sizeof varlist'
             scalar __gtools_gregress_cons          = `"`constant'"' != "noconstant"
+            scalar __gtools_gregress_consest       = .
+            scalar __gtools_gregress_savecons      = `"`savecons'"' == "savecons"
+            scalar __gtools_gregress_rss           = .
+            scalar __gtools_gregress_tss           = .
             scalar __gtools_gregress_robust        = `"`robust'"'   != ""
             scalar __gtools_gregress_cluster       = `:list sizeof cluster'
             scalar __gtools_gregress_absorb        = `:list sizeof absorb'
@@ -1939,7 +1958,7 @@ program _gtools_internal, rclass
                 disp as txt "({bf:warning}: cluster() with multiple variables is assumed to be nested)"
             }
 
-            if ( scalar(__gtools_gregress_kvars) < 2 ) {
+            if ( (scalar(__gtools_gregress_kvars) < 2) & ((scalar(__gtools_gregress_absorb) == 0) | scalar(__gtools_gregress_ivreg)) ) {
                 disp as err "2 or more variables required: depvar indepvar [indepvar ...]"
                 local rc = 198
                 clean_all `rc'
@@ -2225,10 +2244,11 @@ program _gtools_internal, rclass
                 local regressvars `regressvars' `residuals'
             }
 
+            * TODO: xx I believe I have fixed both predict() and alphas(); the notes are deprecated. Test.
             scalar __gtools_gregress_savegpred = `"`predict'"' != ""
             if ( scalar(__gtools_gregress_savegpred) ) {
-                disp as txt "{bf:Warning}: The behavior of predict() is different cross functions."
-                disp as txt "Do not use unless you understand the code and know what it does."
+                * disp as txt "{bf:Warning}: The behavior of predict() is different cross functions."
+                * disp as txt "Do not use unless you understand the code and know what it does."
                 if ( "`replace'" == "" ) {
                     cap noi confirm new var `predict'
                     if ( _rc ) {
@@ -2244,6 +2264,33 @@ program _gtools_internal, rclass
                     qui mata: (void) st_addvar(`"`:set type'"', `"`predict'"')
                 }
                 local regressvars `regressvars' `predict'
+            }
+
+            scalar __gtools_gregress_savegalph = `"`alphas'"' != ""
+            if ( scalar(__gtools_gregress_savegalph) ) {
+                * disp as txt "{bf:Warning}: The behavior of alphas() is different cross functions."
+                * disp as txt "Do not use unless you understand the code and know what it does."
+                local addalph
+                foreach alph of local alphas {
+                    if ( "`replace'" == "" ) {
+                        cap noi confirm new var `alph'
+                        if ( _rc ) {
+                            local rc = _rc
+                            clean_all `rc'
+                            exit `rc'
+                        }
+                    }
+                    else {
+                        cap confirm new var `alph'
+                    }
+                    if ( _rc == 0 ) {
+                        local addalph `addalph' `alph'
+                    }
+                }
+                if ( `:list sizeof addalph' ) {
+                    qui mata: (void) st_addvar(J(1, `:list sizeof addalph', `"`:set type'"'), tokens(`"`addalph'"'))
+                }
+                local regressvars `regressvars' `alphas'
             }
 
             * TODO: strL support
@@ -3413,6 +3460,7 @@ program clean_all
     global GTOOLS_GREGVCOV_FILE
     global GTOOLS_GREGCLUS_FILE
     global GTOOLS_GREGABS_FILE
+    global GTOOLS_GREGINFO_FILE
     global GTOOLS_GHDFEABS_FILE
     global GTOOLS_GSTATS_FILE
     global GTOOLS_BYVAR_FILE
@@ -3429,8 +3477,11 @@ program clean_all
     cap scalar drop __gtools_gfile_topmat
     cap scalar drop __gtools_gfile_gregb
     cap scalar drop __gtools_gfile_gregse
+    cap scalar drop __gtools_gfile_gregvcov
     cap scalar drop __gtools_gfile_gregclus
     cap scalar drop __gtools_gfile_gregabs
+    cap scalar drop __gtools_gfile_greginfo
+    cap scalar drop __gtools_gfile_ghdfeabs
     cap scalar drop __gtools_gfile_hdfeabs
     cap scalar drop __gtools_init_targ
     cap scalar drop __gtools_any_if
@@ -4975,6 +5026,10 @@ program gregress_scalars
         scalar __gtools_gregress_kv            = 0
         scalar __gtools_gregress_kvars         = 0
         scalar __gtools_gregress_cons          = 0
+        scalar __gtools_gregress_consest       = .
+        scalar __gtools_gregress_savecons      = 1
+        scalar __gtools_gregress_rss           = .
+        scalar __gtools_gregress_tss           = .
         scalar __gtools_gregress_robust        = 0
         scalar __gtools_gregress_cluster       = 0
         scalar __gtools_gregress_absorb        = 0
@@ -5001,6 +5056,7 @@ program gregress_scalars
         scalar __gtools_gregress_saveghdfe     = 0
         scalar __gtools_gregress_savegresid    = 0
         scalar __gtools_gregress_savegpred     = 0
+        scalar __gtools_gregress_savegalph     = 0
         scalar __gtools_gregress_savegabs      = 0
         scalar __gtools_gregress_moving        = 0
         scalar __gtools_gregress_moving_l      = 0
@@ -5017,6 +5073,10 @@ program gregress_scalars
         cap scalar drop __gtools_gregress_kv
         cap scalar drop __gtools_gregress_kvars
         cap scalar drop __gtools_gregress_cons
+        cap scalar drop __gtools_gregress_consest
+        cap scalar drop __gtools_gregress_savecons
+        cap scalar drop __gtools_gregress_rss
+        cap scalar drop __gtools_gregress_tss
         cap scalar drop __gtools_gregress_robust
         cap scalar drop __gtools_gregress_cluster
         cap scalar drop __gtools_gregress_absorb
@@ -5043,6 +5103,7 @@ program gregress_scalars
         cap scalar drop __gtools_gregress_saveghdfe
         cap scalar drop __gtools_gregress_savegresid
         cap scalar drop __gtools_gregress_savegpred
+        cap scalar drop __gtools_gregress_savegalph
         cap scalar drop __gtools_gregress_savegabs
         cap scalar drop __gtools_gregress_moving
         cap scalar drop __gtools_gregress_moving_l

@@ -21,8 +21,13 @@ foreach name in  ///
 			}
 	}
 
-do "//delta/jrc/B/B.6/scidata/users/FR/fit_phd_lectures/Lab/L2/scripts/stata_all_in_one_temp.do"
+* fix problems with cache for frenchies estimator
+gtools, upgrade
+discard
 
+local github https://raw.githubusercontent.com
+net install honestdid, from(`github'/mcaceresb/stata-honestdid/main) replace
+honestdid _plugin_check
 
 *graph scheme pack
 foreach name in plotplainblind {

@@ -53,12 +53,12 @@ net set ado "stata_packages"
 *=============================================================================*
 
 // Install required packages
-global install_packages  0
+global install_packages  1
 
-global housekeep         0
-global run_01_did        0
-global run_02_sa         0
-global run_03_honestdid  0
+global housekeep         1
+global run_01_did        1
+global run_02_sa         1
+global run_03_honestdid  1
 
 // Initialize log and record system parameters
 *=============================================================================*
