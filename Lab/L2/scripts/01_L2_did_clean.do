@@ -134,10 +134,9 @@ restore
 * ----------------------------------------------------------------------------
 use "${data_path}/superstar.dta", clear
 
-keep id bvdid year markupmattl_trim ma_t_tech ma_d_tech ma_tech_first_y ut_strict1
+keep id year markupmattl_trim ma_t_tech ma_d_tech ma_tech_first_y ut_strict1
 
 label var id               "Firm identifier (numeric)"
-label var bvdid            "BvD firm identifier"
 label var year             "Year"
 label var markupmattl_trim "De Loecker-Warzynski markup (trimmed)"
 label var ma_t_tech        "Post first tech M&A indicator"
@@ -164,12 +163,12 @@ di as text _n "=== M&A: TWFE STATIC REGRESSIONS ==="
 cap est drop _all
 
 * Baseline: all non-treated as control
-reghdfe $y i.${x}, a(bvdid year) vce(cluster bvdid)
+reghdfe $y i.${x}, a(id year) vce(cluster id)
 est store ma_twfe_base
 estadd local ctrl_group "All non-treated"
 
 * Restrict to not-yet-treated + controls after general M&A treatement
-reghdfe $y i.${x} if ut_strict1 == 1, a(bvdid year) vce(cluster bvdid)
+reghdfe $y i.${x} if ut_strict1 == 1, a(id year) vce(cluster id)
 est store ma_twfe_nyt
 estadd local ctrl_group "Not-yet-treated"
 
@@ -205,7 +204,7 @@ forvalues l = 2/`forward' {
     gen F`l'event = (time_to_treat == -`l') & !missing(ma_tech_first_y)
 }
 
-reghdfe $y F*event L*event, a(bvdid year) vce(cluster bvdid)
+reghdfe $y F*event L*event, a(id year) vce(cluster id)
 est store est_OLS
 
 testparm F2event-F7event
@@ -214,7 +213,7 @@ local fp_twfe = r(p)
 local N_obs   = e(N)
 
 * Simple ATT for annotation
-reghdfe $y ma_t_tech, a(bvdid year) vce(cluster bvdid)
+reghdfe $y ma_t_tech, a(id year) vce(cluster id)
 local b_twfe  = _b[ma_t_tech]
 local se_twfe = _se[ma_t_tech]
 
@@ -232,7 +231,7 @@ mata: mata mlib index
 
 gen never = (ma_tech_first_y == .)
 
-qui eventstudyinteract $y L*event F*event, vce(cluster bvdid) ///
+qui eventstudyinteract $y L*event F*event, vce(cluster id) ///
     absorb(id year) cohort(ma_tech_first_y) control_cohort(never)
 est store est_SA
 matrix sa_b = e(b_iw)
@@ -248,7 +247,7 @@ local b_sa  = r(estimate)
 local se_sa = r(se)
 
 * Re-post stored estimates for event_plot
-qui eventstudyinteract $y L*event F*event, vce(cluster bvdid) ///
+qui eventstudyinteract $y L*event F*event, vce(cluster id) ///
     absorb(id year) cohort(ma_tech_first_y) control_cohort(never)
 est store est_SA
 matrix sa_b = e(b_iw)
