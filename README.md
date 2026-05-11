@@ -67,11 +67,6 @@ All lab sessions use **Stata 19** (should work on previous versions as well). Op
 | L3-2 | Pinotti (2015) | Synthetic control | Mafia expansion → −16% GDP per capita |
 | L3-3 | Autor, Dorn & Hanson (2013) | Shift-share IV | China shock → −0.6 pp manufacturing employment |
 
----
-
-## Slides & notes
-
-Slides (`Slides/`) are excluded from version control and will be made available after the 7th of May.
 
 ---
 
